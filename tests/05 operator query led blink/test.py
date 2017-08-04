@@ -1,5 +1,9 @@
-import sys
+def test_procedure():
 
-
-
-sys.exit(0)
+    return True
+    
+    
+if test_procedure():
+    tests[TESTNAME]["status"] = "success"
+else:
+    tests[TESTNAME]["status"] = "failure"
