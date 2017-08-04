@@ -5,6 +5,9 @@ from dialog import Dialog as Masterdialog
 import time
 import signal
 
+masterdialog = Masterdialog(dialog="dialog")
+masterdialog.set_background_title(
+    "Fermium LABS testing procedure - Hall Effect apparatus")
 
 testspaths = glob.glob("./tests/*/test.py")
 testspaths.sort()
@@ -30,9 +33,7 @@ def show_master_dialog():
         for test in d:
             totalcounter += 1
         return int(successcounter / totalcounter * 100)
-    masterdialog = Masterdialog(dialog="dialog")
-    masterdialog.set_background_title(
-        "Fermium LABS testing procedure - Hall Effect apparatus")
+
     percent = calculate_progress_percentage(tests)
     masterdialog.mixedgauge("TEST SUMMARY - Press ENTER key to continue...",
                             percent=percent, elements=[(k, v["status"]) for k, v in tests.items()])
