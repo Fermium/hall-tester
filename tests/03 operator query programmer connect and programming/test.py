@@ -12,6 +12,10 @@ firmware_commit_hash = "d5826a9fbcaca5789f16ed46055cb2280b515cf4"
 firmware_filename = "main.hex"
 firmware_path = "hall-firmware-v2/develop/d5826a9fbcaca5789f16ed46055cb2280b515cf4/"
 
+avrdude_mcu = "atmega32u4"
+avrdude_programmer = "usbasp"
+avrdude_fuses_flags = "-U lfuse:w:0x9e:m -U hfuse:w:0x99:m -U efuse:w:0xc3:m"
+
 destination_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/")
 firmware_md5_filename = "checksums.md5"
 
@@ -50,12 +54,22 @@ def test_procedure():
     else:
         d.msgbox("Downloaded a corrupt file, test failed!")
         return False
+        
+    
+    d.msgbox("Please connect the USBASP programmer to both board and PC, then press ok")
+    # program the device
+    #
+    avrdudereturncode = subprocess.call("avrdude -p " + avrdude_mcu + " -c " + avrdude_programmer + " -U flash:w:" + firmware_filename + avrdude_fuses_flags, shell=True, cwd=destination_path)
+    if md5sumreturncode is 0:
+        d.msgbox("firmware upload successful")
+        return True
+    else:
+        d.msgbox("Firmware upload failed")
+        return False
 
 
 
-"""
 if test_procedure():
     tests[TESTNAME]["status"] = "success"
 else:
     tests[TESTNAME]["status"] = "failure"
-"""
