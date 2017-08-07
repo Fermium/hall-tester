@@ -9,15 +9,21 @@ masterdialog = Masterdialog(dialog="dialog")
 masterdialog.set_background_title(
     "Fermium LABS testing procedure - Hall Effect apparatus")
 
-testtorun = input("Which test do you want to run? ")
-try:
-    int(testtorun)
-except ValueError:
-    print("Please insert an integer number")
+testtorun = masterdialog.inputbox("Which test do you want to run? ")
+
+
+if testtorun[0] == "ok": #user inserted a number and did not press cancel
+    try:
+        
+        int(testtorun[1])
+    except ValueError:
+        print("Please insert an integer number")
+        sys.exit(1)
+else: #user pressed cancel
     sys.exit(0)
 
 
-testspaths = glob.glob("./tests/" + testtorun + "*/test.py")
+testspaths = glob.glob("./tests/" + testtorun[1] + "*/test.py")
 testspaths.sort()
 
 # Fundamental test dict

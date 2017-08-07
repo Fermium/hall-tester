@@ -15,7 +15,7 @@ def test_procedure():
     if testquery is not "ok":
         d.msgbox("Test Interrotto")
         return False
-    else:
+    else: #the user pressed ok
         return True
 
     # this line should never be executed
