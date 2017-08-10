@@ -9,7 +9,11 @@ from dialog import Dialog
     
     
 
-def test_procedure():    
+def test_procedure():   
+    
+    d = Dialog(dialog="dialog")
+    d.set_background_title("Testing: " + TESTNAME)
+         
     try:
         ht.init()
     except:
@@ -31,9 +35,12 @@ def test_procedure():
     
     # take an average of the thermocouple voltage
     average = 0
-    for i in range(50):
-        average += ht.pop_measure(scan)["ch2"]
-    average = average / 50
+    for i in range(10):
+        time.sleep(0.2)
+        popped_meas = ht.pop_measure(scan)
+        if popped_meas is not None:
+            average += popped_meas["ch2"]        
+    average = average / 10
     if average <= 2.0:
         pass
     else:
@@ -48,15 +55,18 @@ def test_procedure():
     
     # take an average of the thermocouple voltage
     average = 0
-    for i in range(50):
-        average += ht.pop_measure(scan)["ch2"]
-    average = average / 50
+    for i in range(10):
+        time.sleep(0.2)
+        popped_meas = ht.pop_measure(scan)
+        if popped_meas is not None:
+            average += popped_meas["ch2"]
+    average = average / 10
     if average >= 2.0:
         pass
     else:
         d.msgbox("termocouple pullup not triggered, measured an avg of " + str(average) + " V")
         return False
-    
+    return True
 """    
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
@@ -89,7 +99,7 @@ def test_procedure():
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             QtGui.QApplication.instance().exec_()
 """
-    return True
+    
     
     
 if test_procedure():
