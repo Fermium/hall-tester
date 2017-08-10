@@ -33,9 +33,6 @@ def compute(assets_path):
 
     #first model, ch3=a+b*raw_current_code
     model1 = r.lm('ch3~raw_current_code')
-    check1 = False
-    if(r['pf'](summary(model1)[9][0],summary(model1)[9][1],summary(model1)[9][2],lower_tail=False)[0]<=0.005):
-        check1=True
 
     ch3vsraw = coef(model1)
     ch3vsraw[0] #intercept
@@ -50,8 +47,13 @@ def compute(assets_path):
         ggplot2.ggtitle('Ch3 vs Raw Current')
     pp.plot()
     grdevices.dev_off()
+    
+    if(r['pf'](summary(model1)[9][0],summary(model1)[9][1],summary(model1)[9][2],lower_tail=False)[0]<=0.005):
+        return True
+    else:
+        return False
     #plot for visual check, red line is the fitting line and black is the data
-
+    """
     #second model, raw_current_code=a'+b' * ch3
     model2 = r.lm('raw_current_code~ch3') # like the other model data here is in a straight line
     check2 = False
@@ -70,10 +72,5 @@ def compute(assets_path):
         ggplot2.geom_line()+\
         ggplot2.ggtitle('Raw Current vs Ch3')
     pp.plot()
-    grdevices.dev_off()
-    
-    if check1 is False or check2 is False:
-        return False
-    else:
-        return True
+    grdevices.dev_off()"""
     #plot for visual check, red line is the fitting line and black is the data

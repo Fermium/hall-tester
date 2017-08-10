@@ -9,7 +9,7 @@ def test_procedure():
 
     d.set_background_title("Testing: " + TESTNAME)
 
-    testquery = d.msgbox("Scollega la hub board di test e collaga la hub board definitiva", width=60)
+    testquery = d.msgbox("Scollega la HUB board di test e collega la HUB board definitiva", width=60)
 
     # The user pressed cancel
     if testquery is not "ok":
