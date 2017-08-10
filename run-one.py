@@ -49,6 +49,7 @@ def signal_handler(signal, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+exitstatus = 0
 
 # Execute tests
 for TESTNAME in tests:
@@ -61,10 +62,17 @@ for TESTNAME in tests:
     # clear screen
     print(chr(27) + "[2J")
     
+    # Execute test
     testfile = open(tests[TESTNAME]["path"], "r")
-    # while tests[TESTNAME]["status"] != "success":
     exec(testfile.read())
+    
+    
+    masterdialog.msgbox("Test" + " \"" + TESTNAME + "\" " + "exit status is " + tests[TESTNAME]["status"], width=60)
+    
+    # Exit with 1 if at least one test fails
+    if tests[TESTNAME]["status"] is not "success":
+        exitstatus = 1
 
 
 print(chr(27) + "[2J")
-sys.exit(0)
+sys.exit(exitstatus)
