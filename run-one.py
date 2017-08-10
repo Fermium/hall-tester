@@ -64,8 +64,9 @@ for TESTNAME in tests:
     
     # Execute test
     testfile = open(tests[TESTNAME]["path"], "r")
+    sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
     exec(testfile.read())
-    
+    sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
     
     masterdialog.msgbox("Test" + " \"" + TESTNAME + "\" " + "exit status is " + tests[TESTNAME]["status"], width=60)
     

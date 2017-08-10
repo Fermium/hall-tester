@@ -35,10 +35,10 @@ def test_procedure():
 
     # Attempt to download file
     try:
-        with open(os.path.join(destination_path + firmware_filename), 'wb') as data:
-            s3.Bucket(firmware_bucket_name).download_fileobj(os.path.join(firmware_path + firmware_filename), data)
-        with open(os.path.join(destination_path + firmware_md5_filename), 'wb') as data:
-            s3.Bucket(firmware_bucket_name).download_fileobj(os.path.join(firmware_path + firmware_md5_filename), data)
+        with open(os.path.join(destination_path , firmware_filename), 'wb') as data:
+            s3.Bucket(firmware_bucket_name).download_fileobj(os.path.join(firmware_path , firmware_filename), data)
+        with open(os.path.join(destination_path , firmware_md5_filename), 'wb') as data:
+            s3.Bucket(firmware_bucket_name).download_fileobj(os.path.join(firmware_path , firmware_md5_filename), data)
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "404":
             d.msgbox("unable to download the firmware: 404 not found")
