@@ -6,9 +6,6 @@ import numpy as np
 from dialog import Dialog
 
 
-    
-    
-
 def test_procedure():   
     
     d = Dialog(dialog="dialog")

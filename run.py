@@ -63,7 +63,9 @@ for TESTNAME in tests:
     show_master_dialog()
     testfile = open(tests[TESTNAME]["path"], "r")
     # while tests[TESTNAME]["status"] != "success":
+    sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
     exec(testfile.read())
+    sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
 
 
 show_master_dialog()

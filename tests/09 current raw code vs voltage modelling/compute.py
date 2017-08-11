@@ -4,6 +4,8 @@ import readline
 import rpy2.robjects as robj
 import csv
 import os
+import pickle
+
 
 def compute(assets_path):
     r = robj.r
@@ -37,6 +39,11 @@ def compute(assets_path):
     ch3vsraw = coef(model1)
     ch3vsraw[0] #intercept
     ch3vsraw[1] #slope
+    
+    configuration = { "current_compensation_intercept": ch3vsraw[0], "current_compensation_slope" : ch3vsraw[1]}
+    picle.dump ( configuration, open(os.path.join(assets_path , "configuration.json"),"wb"))
+    
+    
 
     grdevices.png(file=os.path.join(assets_path,  "ch3vsraw.png"),width=512,height=512)
     gp = ggplot2.ggplot(data)
