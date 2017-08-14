@@ -28,7 +28,7 @@ def show_master_dialog():
         """Calculates progress of the testing operation"""
         successcounter = 0
         for test in d:
-            if d[test]["status"] is "success":
+            if d[test]["status"] != "not yet run":
                 successcounter += 1
         totalcounter = 0
         for test in d:

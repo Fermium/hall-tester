@@ -39,19 +39,23 @@ def operator_query_passfail():
 
 
 def test_procedure():
+    d = Dialog(dialog="dialog")
+
+    d.set_background_title("Testing: " + TESTNAME)
     
     if not operator_query_instructions():
         return False
     
-    
+    return True
     try:
         ht.init()
-    except:
+        # Acquire the Hall Effect Apparatus
+        scan = ht.acquire(0x16d0,0x0c9b)
+    except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
         
-    # Acquire the Hall Effect Apparatus
-    scan = ht.acquire(0x16d0,0x0c9b)
+
     
     # Start Measuring
     ht.enable(scan)

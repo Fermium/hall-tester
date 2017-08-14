@@ -1,3 +1,5 @@
 pythondialog
 data-chan
 pyqtgraph
+boto3
+rpy2

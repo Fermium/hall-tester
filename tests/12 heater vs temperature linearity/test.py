@@ -7,17 +7,7 @@ import compute
 
 def test_procedure():
     
-    
-    
-    
-    
     return True
-    
-    
-    
-    
-    
-    
     
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)

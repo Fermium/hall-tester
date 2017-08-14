@@ -13,12 +13,13 @@ def test_procedure():
          
     try:
         ht.init()
-    except:
+        # Acquire the Hall Effect Apparatus
+        scan = ht.acquire(0x16d0,0x0c9b)
+    except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
         
-    # Acquire the Hall Effect Apparatus
-    scan = ht.acquire(0x16d0,0x0c9b)
+
     
     # Start Measuring
     ht.enable(scan)

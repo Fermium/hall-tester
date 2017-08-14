@@ -13,7 +13,7 @@ def test_procedure():
         ht.init()
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
-    except DataChanDeviceNotFoundOrInaccessibleError:
+    except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
     
