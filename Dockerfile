@@ -20,15 +20,16 @@ RUN apt-get install -y curl grep sed dpkg && \
     rm tini.deb && \
     apt-get clean
 
-RUN /opt/conda/bin/conda update --all
 ENV PATH /opt/conda/bin:$PATH
+
+RUN conda update --all
 
 #R and python dependencies
 RUN apt-get install -y libbz2-dev libreadline-dev 
-RUN /opt/conda/bin/conda install -y r-essentials
+RUN conda install -y r-essentials
 
 #Programming ICs and stuff
-RUN apt-get install -y avrdude flashrom
+RUN apt-get install -y avrdude flashrom dialog
 RUN apt-get install -y build-essential
 
 ADD requirements.txt /tmp/requirements.txt

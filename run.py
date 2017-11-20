@@ -10,6 +10,7 @@ masterdialog.set_background_title(
     "Fermium LABS testing procedure - Hall Effect apparatus")
 
 testspaths = glob.glob("./tests/*/test.py")
+print(testspaths)
 testspaths.sort()
 
 # Fundamental test dict
@@ -21,19 +22,21 @@ for testpath in testspaths:
     tests[name]["status"] = "not yet run"
     tests[name]["data"] = {}
     #tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
-    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "..", "..", "assets", name)
+    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets", name , "/")
+    print(tests[name]["asset_path"])
 del testspaths
 
 
 for test in tests:
         # cleanup files
         for f in glob.glob(tests[test]["asset_path"] + "*"):
-            os.remove(f)
+            #os.remove(f)
+            print(f)
         # Create assets directory if not existing
         if not os.path.exists(tests[test]["asset_path"]):
             os.makedirs(tests[test]["asset_path"])
 
-
+sys.exit()
 def show_master_dialog():
     """show quick summary of the progress"""
     def calculate_progress_percentage(d):
