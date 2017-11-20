@@ -41,7 +41,7 @@ def compute(assets_path):
     ch3vsraw[1] #slope
     
     configuration = { "current_compensation_intercept": ch3vsraw[0], "current_compensation_slope" : ch3vsraw[1]}
-    picle.dump ( configuration, open(os.path.join(assets_path , "configuration.json"),"wb"))
+    pickle.dump ( configuration, open(os.path.join(assets_path , "configuration.json"),"wb"))
     
     
 
