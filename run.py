@@ -3,6 +3,7 @@ import sys
 import os
 from dialog import Dialog as Masterdialog
 import signal
+import json
 
 masterdialog = Masterdialog(dialog="dialog")
 masterdialog.set_background_title(
@@ -18,8 +19,19 @@ for testpath in testspaths:
     tests[name] = {}
     tests[name]["path"] = os.path.abspath(testpath)
     tests[name]["status"] = "not yet run"
-    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
+    tests[name]["data"] = {}
+    #tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
+    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "..", "..", "assets", name)
 del testspaths
+
+
+for test in tests:
+        # cleanup files
+        for f in glob.glob(tests[test]["asset_path"] + "*"):
+            os.remove(f)
+        # Create assets directory if not existing
+        if not os.path.exists(tests[test]["asset_path"]):
+            os.makedirs(tests[test]["asset_path"])
 
 
 def show_master_dialog():
@@ -52,12 +64,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Execute tests
 for TESTNAME in tests:
-    # cleanup files
-    files = glob.glob(os.path.join(os.path.dirname(
-        tests[TESTNAME]["path"]) + "/" + "assets/*"))
-    for f in files:
-        os.remove(f)
-    
+
     # clear screen
     print(chr(27) + "[2J")
     show_master_dialog()
@@ -66,7 +73,8 @@ for TESTNAME in tests:
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
     exec(testfile.read())
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
-
+    with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
+        json.dump(tests[TESTNAME], fp, sort_keys=True, indent=4)
 
 show_master_dialog()
 

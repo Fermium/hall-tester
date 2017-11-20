@@ -21,8 +21,18 @@ RUN apt-get install -y curl grep sed dpkg && \
     apt-get clean
 
 RUN /opt/conda/bin/conda update --all
-
 ENV PATH /opt/conda/bin:$PATH
+
+#R and python dependencies
+RUN apt-get install -y libbz2-dev libreadline-dev 
+RUN /opt/conda/bin/conda install -y r-essentials
+
+#Programming ICs and stuff
+RUN apt-get install -y avrdude flashrom
+RUN apt-get install -y build-essential
+
+ADD requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]

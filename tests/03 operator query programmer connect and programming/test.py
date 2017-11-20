@@ -28,9 +28,7 @@ def test_procedure():
     # Initialize s3
     s3 = boto3.resource('s3')
 
-    # Create assets directory if not existing
-    if not os.path.exists(tests[TESTNAME]["asset_path"]):
-        os.makedirs(tests[TESTNAME]["asset_path"])
+
 
     # Attempt to download file
     try:
@@ -71,7 +69,6 @@ def test_procedure():
         if avrdudereturncode is not 0:
             d.msgbox("Programming failed, test failed!")
             return False
-
 
 if test_procedure():
     tests[TESTNAME]["status"] = "success"
