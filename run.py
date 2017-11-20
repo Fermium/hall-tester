@@ -2,7 +2,6 @@ import glob
 import sys
 import os
 from dialog import Dialog as Masterdialog
-import time
 import signal
 
 masterdialog = Masterdialog(dialog="dialog")
@@ -15,10 +14,11 @@ testspaths.sort()
 # Fundamental test dict
 tests = {}
 for testpath in testspaths:
-    tests[os.path.dirname(testpath).split("/").pop()] = {}
-    tests[os.path.dirname(testpath).split("/").pop()
-                          ]["path"] = os.path.abspath(testpath)
-    tests[os.path.dirname(testpath).split("/").pop()]["status"] = "not yet run"
+    name = os.path.dirname(testpath).split("/").pop()
+    tests[name] = {}
+    tests[name]["path"] = os.path.abspath(testpath)
+    tests[name]["status"] = "not yet run"
+    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
 del testspaths
 
 
