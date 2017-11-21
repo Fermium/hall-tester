@@ -4,13 +4,19 @@ import os
 from dialog import Dialog as Masterdialog
 import signal
 import json
+import upload_to_s3
+
+############################################# CONFIG
+product_id = 'ltk-hall'
+bucket_name = 'fermiumlabs-manufacturing-data'
+assetglob = "assets/**/*"
+title = "Fermium LABS testing procedure - Hall Effect apparatus"
+####################################################
 
 masterdialog = Masterdialog(dialog="dialog")
-masterdialog.set_background_title(
-    "Fermium LABS testing procedure - Hall Effect apparatus")
+masterdialog.set_background_title(title)
 
 testspaths = glob.glob("./tests/*/test.py")
-print(testspaths)
 testspaths.sort()
 
 # Fundamental test dict
@@ -22,7 +28,7 @@ for testpath in testspaths:
     tests[name]["status"] = "not yet run"
     tests[name]["data"] = {}
     #tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
-    tests[name]["asset_path"] = os.path.join(".", "assets" """<--- put here the serial of the piece""", name)
+    tests[name]["asset_path"] = os.path.join(".", "assets", name)
     print(tests[name]["asset_path"])
 del testspaths
 
@@ -65,7 +71,6 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Execute tests
 for TESTNAME in tests:
-
     # clear screen
     print(chr(27) + "[2J")
     show_master_dialog()
@@ -81,6 +86,7 @@ for TESTNAME in tests:
 
 show_master_dialog()
 
+upload_assets_s3(assetglob, product_id, bucket_name)
 
 print(chr(27) + "[2J")
 sys.exit(0)
