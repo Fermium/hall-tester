@@ -4,7 +4,7 @@ import os
 from dialog import Dialog as Masterdialog
 import signal
 import json
-import upload_to_s3
+from upload_to_s3 import upload_assets_s3
 
 ############################################# CONFIG
 product_id = 'ltk-hall'
@@ -87,6 +87,8 @@ for TESTNAME in tests:
 show_master_dialog()
 
 upload_assets_s3(assetglob, product_id, bucket_name)
+masterdialog.msgbox("Test Interrotto")
+
 
 print(chr(27) + "[2J")
 sys.exit(0)

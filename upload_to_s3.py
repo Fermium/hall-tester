@@ -4,7 +4,7 @@ import boto3
 import glob
 
 
-def upload_assets_s3(assetglob, product_id, bucket_name)
+def upload_assets_s3(assetglob, product_id, bucket_name):
     """
     Uploads a directory from the provided glob to S3
     The directory must contain the name "asset"
