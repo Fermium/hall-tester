@@ -22,21 +22,19 @@ for testpath in testspaths:
     tests[name]["status"] = "not yet run"
     tests[name]["data"] = {}
     #tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets/")
-    tests[name]["asset_path"] = os.path.join(os.path.dirname(tests[name]["path"]), "assets", name , "/")
+    tests[name]["asset_path"] = os.path.join(".", "assets" """<--- put here the serial of the piece""", name)
     print(tests[name]["asset_path"])
 del testspaths
 
 
 for test in tests:
         # cleanup files
-        for f in glob.glob(tests[test]["asset_path"] + "*"):
-            #os.remove(f)
-            print(f)
+        for f in glob.glob(os.path.join(tests[test]["asset_path"] , "*")):
+            os.remove(f)
         # Create assets directory if not existing
         if not os.path.exists(tests[test]["asset_path"]):
             os.makedirs(tests[test]["asset_path"])
 
-sys.exit()
 def show_master_dialog():
     """show quick summary of the progress"""
     def calculate_progress_percentage(d):
@@ -74,7 +72,9 @@ for TESTNAME in tests:
     testfile = open(tests[TESTNAME]["path"], "r")
     # while tests[TESTNAME]["status"] != "success":
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
-    exec(testfile.read())
+    #temporary solution
+    if(not any(num in TESTNAME[:2] for num in ("9","8","11","13","14","15","17"))):
+        exec(testfile.read())
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
     with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
         json.dump(tests[TESTNAME], fp, sort_keys=True, indent=4)
@@ -84,4 +84,3 @@ show_master_dialog()
 
 print(chr(27) + "[2J")
 sys.exit(0)
-        

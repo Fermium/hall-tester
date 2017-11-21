@@ -25,7 +25,7 @@ ENV PATH /opt/conda/bin:$PATH
 RUN conda update --all
 
 #R and python dependencies
-RUN apt-get install -y libbz2-dev libreadline-dev 
+RUN apt-get install -y libbz2-dev libreadline-dev
 RUN conda install -y r-essentials
 
 #Programming ICs and stuff

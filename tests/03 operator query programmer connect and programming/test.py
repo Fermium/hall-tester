@@ -43,6 +43,7 @@ def test_procedure():
             d.msgbox("unable to download the firmware: 404 not found")
             return False
         else:
+            print(e.response['Error']['Code'])
             d.msgbox("Exception raised while trying to download the firmware")
             return False
             raise
@@ -59,16 +60,17 @@ def test_procedure():
 
     d.msgbox(
         "Please connect the USBASP programmer to both board and PC, then press ok")
-    
-    
+
+
     # program the device
     with open(os.path.join(tests[TESTNAME]["asset_path"], "avrdude.log"), 'w') as logfile:
         avrdudereturncode = subprocess.call("avrdude -p " + avrdude_mcu + " -c " + avrdude_programmer + " -U flash:w:" +
-                                            firmware_filename + avrdude_fuses_flags, shell=True, cwd=tests[TESTNAME]["asset_path"], stdout=logfile, stderr=logfile)
+                                            firmware_filename +" "+ avrdude_fuses_flags, shell=True, cwd=tests[TESTNAME]["asset_path"], stdout=logfile, stderr=logfile)
         d.programbox(file_path=logfile.name, text="Avrdude programming:")
         if avrdudereturncode is not 0:
             d.msgbox("Programming failed, test failed!")
             return False
+    return True
 
 if test_procedure():
     tests[TESTNAME]["status"] = "success"
