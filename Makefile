@@ -1,7 +1,10 @@
 default: build install-deps
 	
 build: 
-	docker build . -t hall-tester
+	docker build . -t fermiumlabs/hall-tester
+	
+push: build
+	docker push fermiumlabs/hall-tester
 	
 sync:
 	eval "$(ssh-agent -s)"
@@ -12,4 +15,4 @@ clean:
 	find . -name assets -type d -exec rm -rf {} \;
 
 run:
-	docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root "hall-tester" bash -c "cd /root && python /root/run.py"
+	docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root fermiumlabs/hall-tester /sbin/my_init -- bash -c "cd /root && python /root/run.py"

@@ -1,6 +1,6 @@
-FROM ubuntu:xenial
+FROM phusion/baseimage
 
-MAINTAINER Kamil Kwiek <kamil.kwiek@continuum.io>
+MAINTAINER Davide Bortolami <d@fermiumlabs.com>
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
@@ -13,12 +13,6 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     /bin/bash ~/anaconda.sh -b -p /opt/conda && \
     rm ~/anaconda.sh
 
-RUN apt-get install -y curl grep sed dpkg && \
-    TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
-    curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
-    dpkg -i tini.deb && \
-    rm tini.deb && \
-    apt-get clean
 
 ENV PATH /opt/conda/bin:$PATH
 
@@ -33,7 +27,8 @@ RUN apt-get install -y avrdude flashrom dialog
 RUN apt-get install -y build-essential
 
 ADD requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
 
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "/bin/bash" ]
+RUN pip install -r /tmp/requirements.txt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+CMD ["/sbin/my_init"]
