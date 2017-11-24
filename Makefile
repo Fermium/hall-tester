@@ -1,5 +1,3 @@
-default: build install-deps
-
 build:
 	docker build . -t hall-tester
 
@@ -13,7 +11,14 @@ clean:
 
 run:
 	export DISPLAY=":0"; xhost +local:root
-	docker run -it --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -e uid=$(shell id -u) -e gid=$(shell id -g) -e DISPLAY=":0" -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root "hall-tester" bash -c "cd root && python /root/run.py"
+	docker run -it --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -e uid=$(shell id -u) -e gid=$(shell id -g) -e DISPLAY=":0" -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root fermiumlabs/hall-tester:latest bash -c "cd root && python /root/run.py"
   export DISPLAY=":0"; xhost -local:root
+	
 test:
-	docker run -it --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -e uid=$(shell id -u) -e gid=$(shell id -g) -e DISPLAY=":0" -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root "hall-tester" bash
+	docker run -it --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -e uid=$(shell id -u) -e gid=$(shell id -g) -e DISPLAY=":0" -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root fermiumlabs/hall-tester:latest bash
+
+push:
+	docker push fermiumlabs/hall-tester:latest
+
+pull:
+	docker pull fermiumlabs/hall-tester:latest

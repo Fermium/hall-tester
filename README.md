@@ -25,3 +25,11 @@ Il file `test.py` eredita l'ambiente di `run.py` inclusi
   - `asset_path` directory dove salvare quello che volete, creata automaticamente prima dell'avvio di test.py
 
 # Arguments 
+
+usare --help 
+
+# AWS
+
+E' necessario esportare le variabili ambientali 
+export AWS_SECRET_ACCESS_KEY=
+export AWS_ACCESS_KEY_ID=
