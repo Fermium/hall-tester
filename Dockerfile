@@ -40,6 +40,8 @@ RUN apt-get install -y build-essential
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
+RUN echo "groupmod -g \$gid root" > /root/.bashrc
+
 # Cleanup
 RUN rm tini.deb
 RUN rm /tmp/requirements.txt
