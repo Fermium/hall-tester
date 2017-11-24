@@ -5,8 +5,18 @@ from dialog import Dialog as Masterdialog
 import signal
 import json
 from upload_to_s3 import upload_assets_s3
+import argparse
 
-############################################# CONFIG
+parser = argparse.ArgumentParser("Run HW Tests")
+parser.add_argument("--filter", dest="filters", type=str,
+                    nargs="+", help="Filter the tests by name")
+parser.add_argument("--quick", dest="quick",
+                    action='store_true', help="Skip the dialogs and execute the script directly")
+parser.add_argument("--s3", dest="s3",
+                    action='store_true', help="upload on S3")
+args = parser.parse_args()
+
+# CONFIG
 product_id = 'ltk-hall'
 bucket_name = 'fermiumlabs-manufacturing-data'
 assetglob = "assets/**/*"
@@ -34,12 +44,17 @@ del testspaths
 
 
 for test in tests:
-        # cleanup files
-        for f in glob.glob(os.path.join(tests[test]["asset_path"] , "*")):
-            os.remove(f)
-        # Create assets directory if not existing
-        if not os.path.exists(tests[test]["asset_path"]):
-            os.makedirs(tests[test]["asset_path"])
+    # cleanup files
+    for f in glob.glob(os.path.join(tests[test]["asset_path"], "*")):
+        os.remove(f)
+    # Create assets directory if not existing
+    if not os.path.exists(tests[test]["asset_path"]):
+        os.makedirs(tests[test]["asset_path"])
+
+
+for filter in args.filters:
+    tests = {k: v for (k, v) in tests.items() if filter in k}
+
 
 def show_master_dialog():
     """show quick summary of the progress"""
@@ -73,21 +88,25 @@ signal.signal(signal.SIGINT, signal_handler)
 for TESTNAME in tests:
     # clear screen
     print(chr(27) + "[2J")
-    show_master_dialog()
+    if not args.quick:
+        show_master_dialog()
     testfile = open(tests[TESTNAME]["path"], "r")
+
     # while tests[TESTNAME]["status"] != "success":
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
-    #temporary solution
-    if(not any(num in TESTNAME[:2] for num in ("9","8","11","13","14","15","17"))):
-        exec(testfile.read())
+    exec(testfile.read())
+
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
     with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
         json.dump(tests[TESTNAME], fp, sort_keys=True, indent=4)
 
-show_master_dialog()
+if not args.quick:
+    show_master_dialog()
 
-upload_assets_s3(assetglob, product_id, bucket_name)
-masterdialog.msgbox("Test Interrotto")
+
+if args.s3:
+    masterdialog.msgbox("Uploading result on S3")
+    upload_assets_s3(assetglob, product_id, bucket_name)
 
 
 print(chr(27) + "[2J")

@@ -23,3 +23,5 @@ Il file `test.py` eredita l'ambiente di `run.py` inclusi
   - `path` full path a test.py
   - `status` Può avere i valori "not yet run" (default), "success" o "failure". Va modificato al termine dell'esecuzione di test.py per indicare i risultati del test
   - `asset_path` directory dove salvare quello che volete, creata automaticamente prima dell'avvio di test.py
+
+# Arguments 
