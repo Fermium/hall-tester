@@ -3,3 +3,5 @@ data-chan
 pyqtgraph
 boto3
 rpy2
+cffi
+pyQt5
