@@ -42,7 +42,7 @@ RUN pip install -r /tmp/requirements.txt
 
 # Cleanup
 RUN rm tini.deb
-RUN rm requirements.txt
+RUN rm /tmp/requirements.txt
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
