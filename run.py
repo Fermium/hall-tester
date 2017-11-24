@@ -9,7 +9,7 @@ import argparse
 
 parser = argparse.ArgumentParser("Run HW Tests")
 parser.add_argument("--filter", dest="filters", type=str,
-                    nargs="+", help="Filter the tests by name")
+                    nargs="+", help="Filter the tests by name", default=False)
 parser.add_argument("--quick", dest="quick",
                     action='store_true', help="Skip the dialogs and execute the script directly")
 parser.add_argument("--s3", dest="s3",
@@ -51,9 +51,9 @@ for test in tests:
     if not os.path.exists(tests[test]["asset_path"]):
         os.makedirs(tests[test]["asset_path"])
 
-
-for filter in args.filters:
-    tests = {k: v for (k, v) in tests.items() if filter in k}
+if args.filters:
+    for filter in args.filters:
+        tests = {k: v for (k, v) in tests.items() if filter in k}
 
 
 def show_master_dialog():
