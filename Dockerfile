@@ -18,7 +18,6 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
 RUN /opt/conda/bin/conda update --all
 ENV PATH /opt/conda/bin:$PATH
 
-
 # Install Tini
 RUN apt-get install -yyq curl grep sed dpkg && \
     TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
@@ -29,10 +28,23 @@ RUN apt-get install -yyq curl grep sed dpkg && \
 RUN apt-get install -yyq  qt5-default libgl1-mesa-glx
 ENV QT_GRAPHICSSYSTEM native
 
+# R and python dependencies
+RUN apt-get install -y libbz2-dev libreadline-dev 
+RUN conda install -y r-essentials
+
+# Programming ICs and stuff
+RUN apt-get install -y avrdude flashrom dialog
+RUN apt-get install -y build-essential
+
+# Install python dependencies
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
+
 # Cleanup
-RUN rm tini.deb && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN rm tini.deb
+RUN rm requirements.txt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]

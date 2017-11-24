@@ -1,5 +1,5 @@
 build:
-	docker build . -t hall-tester
+	docker build . -t fermiumlabs/hall-tester
 
 sync:
 	eval "$(ssh-agent -s)"
@@ -16,13 +16,11 @@ run:
 	
 bash:
 	export DISPLAY=":0"; xhost +local:root
-	export DISPLAY=":0"; xhost +local:docker
 	docker run -it --privileged -v /tmp/.X11-unix:/tmp/.X11-unix -e uid=$(shell id -u) -e gid=$(shell id -g) -e DISPLAY=":0" -e AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) -e AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) -v /dev/bus/usb:/dev/bus/usb -v  $(shell pwd):/root fermiumlabs/hall-tester:latest bash
 	export DISPLAY=":0"; xhost -local:root
-	export DISPLAY=":0"; xhost -local:docker
 
 push:
-	docker push fermiumlabs/hall-tester:latest
+	docker push fermiumlabs/hall-tester
 
 pull:
-	docker pull fermiumlabs/hall-tester:latest
+	docker pull fermiumlabs/hall-tester
