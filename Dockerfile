@@ -41,6 +41,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
 RUN echo "groupmod -g \$gid root" > /root/.bashrc
+RUN source /root/.bashrc
 
 # Cleanup
 RUN rm tini.deb
