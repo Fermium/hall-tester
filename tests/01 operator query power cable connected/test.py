@@ -10,7 +10,7 @@ def test_procedure():
     d.set_background_title("Testing: " + TESTNAME)
 
     testquery = d.msgbox("Collega il cavo IEC di alimentazione", width=60)
-
+    testquery = d.msgbox("Accendi il dispositivo", width=60)
     # The user pressed cancel
     if testquery is not "ok":
         d.msgbox("Test Interrotto")

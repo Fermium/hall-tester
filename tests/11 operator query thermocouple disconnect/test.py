@@ -4,6 +4,7 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 from dialog import Dialog
+import time
 
 
 def test_procedure():   

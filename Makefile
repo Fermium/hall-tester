@@ -7,7 +7,7 @@ sync:
 	lsyncd  -nodaemon -delay 5 -rsyncssh $(shell pwd) d@172.100.0.6  /home/d/hall-tester
 
 clean:
-	find . -name assets -type d -exec rm -rf {} \;
+	rm -rf assets/
 
 run:
 	export DISPLAY=":0"; xhost +local:root

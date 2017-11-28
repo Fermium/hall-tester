@@ -65,7 +65,7 @@ def test_procedure():
     # program the device
     with open(os.path.join(tests[TESTNAME]["asset_path"], "avrdude.log"), 'w') as logfile:
         avrdudereturncode = subprocess.call("avrdude -p " + avrdude_mcu + " -c " + avrdude_programmer + " -U flash:w:" +
-                                            firmware_filename +" "+ avrdude_fuses_flags, shell=True, cwd=tests[TESTNAME]["asset_path"], stdout=logfile, stderr=logfile)
+                                            firmware_filename + " " + avrdude_fuses_flags, shell=True, cwd=tests[TESTNAME]["asset_path"], stdout=logfile, stderr=logfile)
         d.programbox(file_path=logfile.name, text="Avrdude programming:")
         if avrdudereturncode is not 0:
             d.msgbox("Programming failed, test failed!")
