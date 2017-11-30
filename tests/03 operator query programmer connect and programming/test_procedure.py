@@ -32,10 +32,10 @@ def test_procedure(TESTNAME,testDict):
 
     # Attempt to download file
     try:
-        with open(os.path.join(tests[TESTNAME]["asset_path"], firmware_filename), 'wb') as data:
+        with open(os.path.join(testDict["asset_path"], firmware_filename), 'wb') as data:
             s3.Bucket(firmware_bucket_name).download_fileobj(
                 os.path.join(firmware_path, firmware_filename), data)
-        with open(os.path.join(tests[TESTNAME]["asset_path"], firmware_md5_filename), 'wb') as data:
+        with open(os.path.join(testDict["asset_path"], firmware_md5_filename), 'wb') as data:
             s3.Bucket(firmware_bucket_name).download_fileobj(
                 os.path.join(firmware_path, firmware_md5_filename), data)
     except botocore.exceptions.ClientError as e:
@@ -50,7 +50,7 @@ def test_procedure(TESTNAME,testDict):
 
     # check md5 checksum
     md5sumreturncode = subprocess.call(
-        "md5sum -c --ignore-missing --status checksums.md5", shell=True, cwd=tests[TESTNAME]["asset_path"])
+        "md5sum -c --ignore-missing --status checksums.md5", shell=True, cwd=testDict["asset_path"])
     if md5sumreturncode is 0:
         d.msgbox("Downloaded firmware from:\n\n- s3 bucket: " + firmware_bucket_name + "\n- branch: " + firmware_branch +
                  "\n- commit hash: " + firmware_commit_hash + "\n\nMD5 hash checked and resulted correct", width=60, height=15)
@@ -63,9 +63,9 @@ def test_procedure(TESTNAME,testDict):
 
 
     # program the device
-    with open(os.path.join(tests[TESTNAME]["asset_path"], "avrdude.log"), 'w') as logfile:
+    with open(os.path.join(testDict["asset_path"], "avrdude.log"), 'w') as logfile:
         avrdudereturncode = subprocess.call("avrdude -p " + avrdude_mcu + " -c " + avrdude_programmer + " -U flash:w:" +
-                                            firmware_filename + " " + avrdude_fuses_flags, shell=True, cwd=tests[TESTNAME]["asset_path"], stdout=logfile, stderr=logfile)
+                                            firmware_filename + " " + avrdude_fuses_flags, shell=True, cwd=testDict["asset_path"], stdout=logfile, stderr=logfile)
         d.programbox(file_path=logfile.name, text="Avrdude programming:")
         if avrdudereturncode is not 0:
             d.msgbox("Programming failed, test failed!")

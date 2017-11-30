@@ -8,7 +8,8 @@ import signal
 import json
 from upload_to_s3 import upload_assets_s3
 import argparse
-#import time
+from collections import OrderedDict
+import importlib
 
 parser = argparse.ArgumentParser("Run HW Tests")
 parser.add_argument("--filter", dest="filters", type=str,
@@ -31,9 +32,10 @@ masterdialog.set_background_title(title)
 
 testspaths = glob.glob("./tests/*/test_procedure.py")
 testspaths.sort()
-
+print([os.path.dirname(testpath).split("/").pop() for testpath in testspaths])
 # Fundamental test dict
-tests = {}
+tests = OrderedDict()
+print(tests)
 for testpath in testspaths:
     name = os.path.dirname(testpath).split("/").pop()
     tests[name] = {}
@@ -44,15 +46,13 @@ for testpath in testspaths:
     tests[name]["asset_path"] = os.path.join(".", "assets", name)
     print(tests[name]["asset_path"])
 del testspaths
-
-
 for test in tests:
-    # cleanup files
-    for f in glob.glob(os.path.join(tests[test]["asset_path"], "*")):
-        os.remove(f)
-    # Create assets directory if not existing
-    if not os.path.exists(tests[test]["asset_path"]):
-        os.makedirs(tests[test]["asset_path"])
+    #cleanup files
+     for f in glob.glob(os.path.join(tests[test]["asset_path"], "*")):
+         os.remove(f)
+     # Create assets directory if not existing
+     if not os.path.exists(tests[test]["asset_path"]):
+         os.makedirs(tests[test]["asset_path"])
 
 if args.filters:
     for filter in args.filters:
@@ -97,15 +97,18 @@ for TESTNAME in tests:
 
     # while tests[TESTNAME]["status"] != "success":
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
-    import test_procedure
+    if 'test_procedure' in sys.modules:
+        importlib.reload(test_procedure)
+    else:
+        import test_procedure
     tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME])
     if tests[TESTNAME]['data']:
         tests[TESTNAME]["status"] = "success"
     else:
         tests[TESTNAME]["status"] = "failure"
     #exec(testfile.read())
-    del test_procedure
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
+
     with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
         json.dump(tests[TESTNAME], fp, sort_keys=True, indent=4)
 

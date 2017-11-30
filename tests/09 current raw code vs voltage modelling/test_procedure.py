@@ -42,17 +42,6 @@ def test_procedure(TESTNAME,testDict):
             measures[i]["raw_current_code"] = raw_current_codes[i]
 
     d.gauge_stop()
-    # # Create assets directory if not existing
-    # if not os.path.exists(tests[TESTNAME]["asset_path"]):
-    #     os.makedirs(tests[TESTNAME]["asset_path"])
-    # # Write output file
-    # outfile = open(os.path.join(tests[TESTNAME]["asset_path"], "output.csv"), "w")
-    # fieldnames = ["raw_current_code", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
-    # csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames,
-    #                     extrasaction='ignore')
-    # csvwriter.writeheader()
-    # for measure in measures:
-    #     if measures[measure] is not None:
-    #         csvwriter.writerow(measures[measure])
+    
     ht.disconnect_device(scan)
     return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')

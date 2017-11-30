@@ -43,28 +43,5 @@ def test_procedure(TESTNAME,testDict):
 
     d.gauge_stop()
 
-    destination_path = os.path.join(os.path.dirname(
-        tests[TESTNAME]["path"]) , "assets/")
-
-    # # Create assets directory if not existing
-    # if not os.path.exists(destination_path):
-    #     os.makedirs(destination_path)
-    #
-    # # Write output file
-    # outfile = open(os.path.join(destination_path, "output.csv"), "w")
-    # fieldnames = ["raw_current_code", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
-    # csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames,extrasaction='ignore')
-    # csvwriter.writeheader()
-    # for measure in measures:
-    #     if measures[measure] is not None:
-    #         csvwriter.writerow(measures[measure])
-    #
     ht.disconnect_device(scan)
-    test_result=compute.compute(tests[TESTNAME]["asset_path"],measures,'raw_current_code','ch3')
-
-    if test_result['status']:
-        tests[TESTNAME]['data']['raw_data']=test_result['raw_data']
-        tests[TESTNAME]['data']['coeff']=test_result['coeff']
-        return True
-    else:
-        return False
+    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
