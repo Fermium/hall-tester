@@ -3,7 +3,7 @@ import os
 from dialog import Dialog
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
 
     d = Dialog(dialog="dialog")
 
@@ -20,9 +20,3 @@ def test_procedure():
 
     # this line should never be executed
     return False
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

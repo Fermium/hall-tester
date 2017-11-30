@@ -4,34 +4,14 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 from dialog import Dialog
+import time
 
 
-def operator_query_instructions():
+def test_procedure(TESTNAME,testDict):
+
     d = Dialog(dialog="dialog")
-
     d.set_background_title("Testing: " + TESTNAME)
-    
-    testquery = d.msgbox("Tara il generatore affinche' ci sia minima variazione della corrente", width=60)
 
-    # The user pressed cancel
-    if testquery is not "ok":
-        d.msgbox("Test Interrotto")
-        return False
-    else: #the user pressed ok
-        return True
-
-
-
-def test_procedure():
-    d = Dialog(dialog="dialog")
-
-    d.set_background_title("Testing: " + TESTNAME)
-    
-    
-    if not operator_query_instructions():
-        return False
-    
-    
     try:
         ht.init()
         # Acquire the Hall Effect Apparatus
@@ -39,28 +19,65 @@ def test_procedure():
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
-        
-        
 
-    
+
+
     # Start Measuring
     ht.enable(scan)
-    ht.set_channel_gain(scan, 3, 5)
-    
-    # Set CC gen
-    ht.set_current_fixed(scan, 0.3)
+    ht.set_channel_gain(scan, 2, 5)
 
+
+    d.msgbox("Connect the thermocouple and press ok")
+    #pop all old measures
+    while(ht.pop_measure(scan) != None ):
+        pass
+
+    # take an average of the thermocouple voltage
+    average = 0
+    for i in range(10):
+        time.sleep(0.2)
+        popped_meas = ht.pop_measure(scan)
+        if popped_meas is not None:
+            average += popped_meas["ch2"]
+    average = average / 10
+    if average <= 2.0:
+        pass
+    else:
+        d.msgbox("termocouple not connected, measured an avg of " + str(average) + " V")
+        return False
+
+
+    d.msgbox("Disconnect the thermocouple and press ok")
+    #pop all old measures
+    while(ht.pop_measure(scan) != None ):
+        pass
+    ht.disconnect_device(scan)
+    # take an average of the thermocouple voltage
+    average = 0
+    for i in range(10):
+        time.sleep(0.2)
+        popped_meas = ht.pop_measure(scan)
+        if popped_meas is not None:
+            average += popped_meas["ch2"]
+    average = average / 10
+    if average >= 2.0:
+        pass
+    else:
+        d.msgbox("termocouple pullup not triggered, measured an avg of " + str(average) + " V")
+        return False
+    return True
+"""
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
 
-    meas = {"ch3":{}}
-    meas["ch3"]["name"] = "V on CC Shunt"
-    
+    meas = {"ch2":{}}
+    meas["ch2"]["name"] = "Thermocouple voltage"
+
     for key in meas:
         meas[key]["plotobj"] = win.addPlot(title=meas[key]["name"])
         meas[key]["data"] = [0]*100
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
-                
+
 
     def update():
         popped_meas = ht.pop_measure(scan)
@@ -80,11 +97,4 @@ def test_procedure():
         import sys
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             QtGui.QApplication.instance().exec_()
-
-    return True
-    
-    
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"
+"""

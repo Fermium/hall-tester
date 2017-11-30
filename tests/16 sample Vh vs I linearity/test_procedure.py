@@ -20,7 +20,7 @@ def operator_query_instructions():
         return True
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
@@ -80,17 +80,10 @@ def test_procedure():
     #     if measures[measure] is not None:
     #         csvwriter.writerow(measures[measure])
     test_result=compute.compute(tests[TESTNAME]["asset_path"],measures,'raw_current_code','ch3')
-
+    ht.disconnect_device(scan)
     if test_result['status']:
         tests[TESTNAME]['data']['raw_data']=test_result['raw_data']
         tests[TESTNAME]['data']['coeff']=test_result['coeff']
         return True
     else:
         return False
-
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

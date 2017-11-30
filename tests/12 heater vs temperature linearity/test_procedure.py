@@ -10,7 +10,7 @@ sleep = 0.5
 samples_count = 1000
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -64,6 +64,7 @@ def test_procedure():
     # for measure in measures:
     #     if measures[measure] is not None:
     #         csvwriter.writerow(measures[measure])
+    ht.disconnect_device(scan)
     test_result=compute.compute(tests[TESTNAME]["asset_path"],measures,'raw_current_code','ch3')
 
     if test_result['status']:
@@ -72,8 +73,3 @@ def test_procedure():
         return True
     else:
         return False
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

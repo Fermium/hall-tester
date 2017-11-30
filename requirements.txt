@@ -5,3 +5,5 @@ boto3
 rpy2
 cffi
 pyQt5
+statsmodels
+seaborn

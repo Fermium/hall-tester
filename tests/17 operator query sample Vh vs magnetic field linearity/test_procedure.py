@@ -10,8 +10,8 @@ def operator_query_instructions():
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
-    
-    testquery = d.msgbox("Check that inverting the gaussmeter you get the same abs value of voltage", width=60)
+
+    testquery = d.msgbox("Check that the Hall voltage reponds correctly with the magnetic field by moving the magnet screw", width=60)
 
     # The user pressed cancel
     if testquery is not "ok":
@@ -19,14 +19,14 @@ def operator_query_instructions():
         return False
     else: #the user pressed ok
         return True
-        
-        
+
+
 def operator_query_passfail():
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
-    
-    testquery = d.yesno("Was the voltage inverting the probe the same?", width=60, yes_label="Yes, it was", no_label="No, It wasn't")
+
+    testquery = d.yesno("Did the Vh value responds reasonably to the magnetic field change?", width=60, yes_label="Yes, they did", no_label="No, they didn't")
 
     # The user pressed cancel
     if testquery is not "ok":
@@ -38,15 +38,15 @@ def operator_query_passfail():
 
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
-    
+
     if not operator_query_instructions():
         return False
-    
-    return True
+
+
     try:
         ht.init()
         # Acquire the Hall Effect Apparatus
@@ -54,27 +54,27 @@ def test_procedure():
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
-        
 
-    
+
+
     # Start Measuring
     ht.enable(scan)
-    ht.set_channel_gain(scan, 5, 5)
-    
+    ht.set_channel_gain(scan, 6, 5)
+
     # Set CC gen
-    ht.set_current_fixed(scan, 0.3)
+    ht.set_current_fixed(scan, 0.05)
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
 
-    meas = {"ch5":{}}
-    meas["ch5"]["name"] = "Absolute value of Gaussmeter probe Voltage"
-    
+    meas = {"ch6":{}}
+    meas["ch6"]["name"] = "Hall voltage (unamplified)"
+
     for key in meas:
         meas[key]["plotobj"] = win.addPlot(title=meas[key]["name"])
         meas[key]["data"] = [0]*100
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
-                
+
 
     def update():
         popped_meas = ht.pop_measure(scan)
@@ -94,13 +94,7 @@ def test_procedure():
         import sys
         if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             QtGui.QApplication.instance().exec_()
-            
-    
 
+
+    ht.disconnect_device(scan)
     return operator_query_passfail()
-    
-    
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

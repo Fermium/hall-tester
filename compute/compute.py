@@ -1,4 +1,3 @@
-#importing package for r
 import numpy
 import readline
 import csv
@@ -23,8 +22,7 @@ def compute(assets_path,data,x,y):
     if(results.f_pvalue<=0.005):
         test['raw_data']={y:Y.tolist(),x:X.tolist()}
         test['coeff']={'intercept':intercept,'slope':slope}
-        test['status']=True
         return test
     else:
-        test['status']=False
-        return test
+
+        return False

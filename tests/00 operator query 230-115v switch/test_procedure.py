@@ -3,7 +3,7 @@ import os
 from dialog import Dialog
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog", autowidgetsize=True)
 
     d.set_background_title("Testing: " + TESTNAME)
@@ -31,11 +31,3 @@ def test_procedure():
         except ValueError:
             d.msgbox("Inserisci un numero!")
             return False
-
-        
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

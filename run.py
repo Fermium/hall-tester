@@ -8,6 +8,7 @@ import signal
 import json
 from upload_to_s3 import upload_assets_s3
 import argparse
+#import time
 
 parser = argparse.ArgumentParser("Run HW Tests")
 parser.add_argument("--filter", dest="filters", type=str,
@@ -28,7 +29,7 @@ title = "Fermium LABS testing procedure - Hall Effect apparatus"
 masterdialog = Masterdialog(dialog="dialog")
 masterdialog.set_background_title(title)
 
-testspaths = glob.glob("./tests/*/test.py")
+testspaths = glob.glob("./tests/*/test_procedure.py")
 testspaths.sort()
 
 # Fundamental test dict
@@ -96,10 +97,14 @@ for TESTNAME in tests:
 
     # while tests[TESTNAME]["status"] != "success":
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
-    import test
-    
+    import test_procedure
+    tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME])
+    if tests[TESTNAME]['data']:
+        tests[TESTNAME]["status"] = "success"
+    else:
+        tests[TESTNAME]["status"] = "failure"
     #exec(testfile.read())
-
+    del test_procedure
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
     with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
         json.dump(tests[TESTNAME], fp, sort_keys=True, indent=4)
@@ -114,4 +119,5 @@ if args.s3:
 
 
 print(chr(27) + "[2J")
-sys.exit(0)
+#time.sleep(2)
+#sys.exit(0)

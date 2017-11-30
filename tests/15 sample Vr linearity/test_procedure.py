@@ -5,13 +5,9 @@ import csv
 import time
 import compute
 
-####### CONFIG
-measures_to_take = 100
-
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
-
     try:
         ht.init()
         # Acquire the Hall Effect Apparatus
@@ -22,12 +18,14 @@ def test_procedure():
 
     # Start Measuring
     ht.enable(scan)
+    print("aa")
     ht.set_channel_gain(scan, 3, 5)
-
-    d.gauge_start("Acquiring DAC Voltage VS Current measures")
+    print("bb")
+    d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
 
     measures = {}
-    raw_current_codes = range (int(4095/2-measures_to_take), int(4095/2+measures_to_take))
+    raw_current_codes = range (int(4095/2-200), int(4095/2+200))
+
     # count from 0 to the total number of steps
     for i in range(len(raw_current_codes)):
 
@@ -37,34 +35,36 @@ def test_procedure():
             pass
         time.sleep(0.150)
         measures[i] = ht.pop_measure(scan)
+
         d.gauge_update(int(float(i) / float(len(raw_current_codes)) * 100.0))
+
         if measures[i] is not None:
             measures[i]["raw_current_code"] = raw_current_codes[i]
 
     d.gauge_stop()
+
+    destination_path = os.path.join(os.path.dirname(
+        tests[TESTNAME]["path"]) , "assets/")
+
     # # Create assets directory if not existing
-    # if not os.path.exists(tests[TESTNAME]["asset_path"]):
-    #     os.makedirs(tests[TESTNAME]["asset_path"])
+    # if not os.path.exists(destination_path):
+    #     os.makedirs(destination_path)
+    #
     # # Write output file
-    # outfile = open(os.path.join(tests[TESTNAME]["asset_path"], "output.csv"), "w")
+    # outfile = open(os.path.join(destination_path, "output.csv"), "w")
     # fieldnames = ["raw_current_code", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
-    # csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames,
-    #                     extrasaction='ignore')
+    # csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames,extrasaction='ignore')
     # csvwriter.writeheader()
     # for measure in measures:
     #     if measures[measure] is not None:
     #         csvwriter.writerow(measures[measure])
+    #
+    ht.disconnect_device(scan)
     test_result=compute.compute(tests[TESTNAME]["asset_path"],measures,'raw_current_code','ch3')
+
     if test_result['status']:
         tests[TESTNAME]['data']['raw_data']=test_result['raw_data']
         tests[TESTNAME]['data']['coeff']=test_result['coeff']
         return True
     else:
         return False
-
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

@@ -3,14 +3,14 @@ import os
 from dialog import Dialog
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
 
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
 
-    testquery = d.msgbox("Collega la scheda di test con resistore da 4ohm allo strumento attraverso il cavo DB25", width=60)
-
+    testquery = d.msgbox("Collega il cavo IEC di alimentazione", width=60)
+    testquery = d.msgbox("Accendi il dispositivo", width=60)
     # The user pressed cancel
     if testquery is not "ok":
         d.msgbox("Test Interrotto")
@@ -20,9 +20,3 @@ def test_procedure():
 
     # this line should never be executed
     return False
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"
