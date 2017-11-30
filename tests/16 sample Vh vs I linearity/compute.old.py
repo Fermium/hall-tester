@@ -22,7 +22,7 @@ def compute(assets_path):
         utils = robj.packages.importr('utils')
         utils.install_packages('ggplot2')
         import rpy2.robjects.lib.ggplot2 as ggplot2
-        
+
     #grdevices to plot to file
     grdevices = robj.packages.importr('grDevices')
 
@@ -37,7 +37,7 @@ def compute(assets_path):
     ch6vsraw = coef(model1)
     ch6vsraw[0] #intercept
     ch6vsraw[1] #slope
-    
+
     # Print graphs
     grdevices.png(file=os.path.join(assets_path,  "vh_vs_raw_current.png"),width=512,height=512)
     gp = ggplot2.ggplot(data)
@@ -48,7 +48,7 @@ def compute(assets_path):
         ggplot2.ggtitle('Vh vs Raw Current')
     pp.plot()
     grdevices.dev_off()
-    
+
     # If the model ( a line ) is a good model (meaning the data is very linear) pass the test
     if(r['pf'](summary(model1)[9][0],summary(model1)[9][1],summary(model1)[9][2],lower_tail=False)[0]<=0.005):
         return True

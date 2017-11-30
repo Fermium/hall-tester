@@ -11,12 +11,12 @@ samples_count = 1000
 
 
 def test_procedure():
-    
+
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
-    
+
     d.msgbox("Connect the heater and press OK")
-    
+
     try:
         ht.init()
         # Acquire the Hall Effect Apparatus
@@ -47,30 +47,31 @@ def test_procedure():
             measures[i]["i"] = i * sleep
 
         d.gauge_update(int(float(i) / samples_count * 100.0))
-        
+
 
 
     d.gauge_stop()
 
-    # Write output file
-    outfile = open(os.path.join(
-        tests[TESTNAME]["asset_path"], "output.csv"), "w")
-        
-    fieldnames = ["i", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
-    csvwriter = csv.DictWriter(
-        outfile, fieldnames=fieldnames, extrasaction='ignore')
-    csvwriter.writeheader()
-    
-    for measure in measures:
-        if measures[measure] is not None:
-            csvwriter.writerow(measures[measure])
+    # # Write output file
+    # outfile = open(os.path.join(
+    #     tests[TESTNAME]["asset_path"], "output.csv"), "w")
+    #
+    # fieldnames = ["i", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
+    # csvwriter = csv.DictWriter(
+    #     outfile, fieldnames=fieldnames, extrasaction='ignore')
+    # csvwriter.writeheader()
+    #
+    # for measure in measures:
+    #     if measures[measure] is not None:
+    #         csvwriter.writerow(measures[measure])
+    test_result=compute.compute(tests[TESTNAME]["asset_path"],measures,'raw_current_code','ch3')
 
-"""
-    if compute.compute(tests[TESTNAME]["asset_path"]):
+    if test_result['status']:
+        tests[TESTNAME]['data']['raw_data']=test_result['raw_data']
+        tests[TESTNAME]['data']['coeff']=test_result['coeff']
         return True
     else:
         return False
-"""
 
 if test_procedure():
     tests[TESTNAME]["status"] = "success"

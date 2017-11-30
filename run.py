@@ -1,8 +1,8 @@
 #!/home/d/anaconda3/bin/python
-
-import glob
 import sys
+import glob
 import os
+sys.path.insert(0, os.path.join('.','compute'))
 from dialog import Dialog as Masterdialog
 import signal
 import json
@@ -96,7 +96,9 @@ for TESTNAME in tests:
 
     # while tests[TESTNAME]["status"] != "success":
     sys.path.append(os.path.dirname(tests[TESTNAME]["path"]))
-    exec(testfile.read())
+    import test
+    
+    #exec(testfile.read())
 
     sys.path.remove(os.path.dirname(tests[TESTNAME]["path"]))
     with open(os.path.join(tests[TESTNAME]["asset_path"], "dump.json"), "w") as fp:
