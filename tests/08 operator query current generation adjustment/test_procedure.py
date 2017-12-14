@@ -6,7 +6,7 @@ import numpy as np
 from dialog import Dialog
 
 
-def operator_query_instructions():
+def operator_query_instructions(TESTNAME):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
@@ -28,7 +28,7 @@ def test_procedure(TESTNAME,testDict):
     d.set_background_title("Testing: " + TESTNAME)
 
 
-    if not operator_query_instructions():
+    if not operator_query_instructions(TESTNAME):
         return False
 
 

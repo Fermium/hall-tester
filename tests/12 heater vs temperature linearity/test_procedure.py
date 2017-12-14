@@ -28,9 +28,9 @@ def test_procedure(TESTNAME,testDict):
     # Start Measuring
     ht.enable(scan)
     ht.set_channel_gain(scan, 2, 1)
-    ht.set_current_fixed(scan, 0.05)
+    #ht.set_current_fixed(scan, 0.05)
 
-    ht.set_heater_state(scan, 127)
+    ht.set_heater_state(scan, 255)
 
     d.gauge_start("Acquiring temperature over Time (with heater on)")
 
