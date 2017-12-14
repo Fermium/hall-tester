@@ -31,21 +31,21 @@ def compute(assets_path):
     data = robj.globalenv['data']
     attach(data)
 
-    #first model, ch1=a+b*raw_current_code
-    model1 = r.lm('ch1~raw_current_code')
+    #first model, ch2=a+b*i
+    model1 = r.lm('ch2~i')
 
-    ch1vsraw = coef(model1)
-    ch1vsraw[0] #intercept
-    ch1vsraw[1] #slope
+    ch2vsi = coef(model1)
+    ch2vsi[0] #intercept
+    ch2vsi[1] #slope
     
     # Print graphs
-    grdevices.png(file=os.path.join(assets_path,  "vr_vs_raw_current.png"),width=512,height=512)
+    grdevices.png(file=os.path.join(assets_path,  "temp_vs_time.png"),width=512,height=512)
     gp = ggplot2.ggplot(data)
     pp = gp + \
-        ggplot2.aes_string(x='raw_current_code',y='ch1')+\
-        ggplot2.geom_abline(intercept=ch1vsraw[0],slope=ch1vsraw[1],color='red')+\
+        ggplot2.aes_string(x='i',y='ch2')+\
+        ggplot2.geom_abline(intercept=ch2vsi[0],slope=ch2vsi[1],color='red')+\
         ggplot2.geom_line()+\
-        ggplot2.ggtitle('ch1 vs Raw Current')
+        ggplot2.ggtitle('ch2 over time')
     pp.plot()
     grdevices.dev_off()
     

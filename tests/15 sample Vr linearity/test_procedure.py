@@ -5,7 +5,7 @@ import csv
 import time
 import compute
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
     try:
@@ -43,31 +43,5 @@ def test_procedure():
 
     d.gauge_stop()
 
-    destination_path = os.path.join(os.path.dirname(
-        tests[TESTNAME]["path"]) , "assets/")
-
-    # Create assets directory if not existing
-    if not os.path.exists(destination_path):
-        os.makedirs(destination_path)
-
-    # Write output file
-    outfile = open(os.path.join(destination_path, "output.csv"), "w")
-    fieldnames = ["raw_current_code", "ch1", "ch2", "ch3", "ch5", "ch6", "ch7"]
-    csvwriter = csv.DictWriter(outfile, fieldnames=fieldnames,extrasaction='ignore')
-    csvwriter.writeheader()
-    for measure in measures:
-        if measures[measure] is not None:
-            csvwriter.writerow(measures[measure])
-
-
-    if compute.compute(destination_path):
-        return True
-    else:
-        return False
-
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"
+    ht.disconnect_device(scan)
+    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')

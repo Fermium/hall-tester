@@ -11,7 +11,7 @@ def operator_query_instructions():
 
     d.set_background_title("Testing: " + TESTNAME)
 
-    testquery = d.msgbox("Check that the Hall voltage reponds correctly with the magnetic field by moving the magnet screw", width=60)
+    testquery = d.msgbox("Check that inverting the gaussmeter you get the same abs value of voltage", width=60)
 
     # The user pressed cancel
     if testquery is not "ok":
@@ -26,7 +26,7 @@ def operator_query_passfail():
 
     d.set_background_title("Testing: " + TESTNAME)
 
-    testquery = d.yesno("Did the Vh value responds reasonably to the magnetic field change?", width=60, yes_label="Yes, they did", no_label="No, they didn't")
+    testquery = d.yesno("Was the voltage inverting the probe the same?", width=60, yes_label="Yes, it was", no_label="No, It wasn't")
 
     # The user pressed cancel
     if testquery is not "ok":
@@ -38,7 +38,7 @@ def operator_query_passfail():
 
 
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
@@ -46,7 +46,7 @@ def test_procedure():
     if not operator_query_instructions():
         return False
 
-
+    return True
     try:
         ht.init()
         # Acquire the Hall Effect Apparatus
@@ -59,16 +59,16 @@ def test_procedure():
 
     # Start Measuring
     ht.enable(scan)
-    ht.set_channel_gain(scan, 6, 5)
+    ht.set_channel_gain(scan, 5, 5)
 
     # Set CC gen
-    ht.set_current_fixed(scan, 0.05)
+    ht.set_current_fixed(scan, 0.3)
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
 
-    meas = {"ch6":{}}
-    meas["ch6"]["name"] = "Hall voltage (unamplified)"
+    meas = {"ch5":{}}
+    meas["ch5"]["name"] = "Absolute value of Gaussmeter probe Voltage"
 
     for key in meas:
         meas[key]["plotobj"] = win.addPlot(title=meas[key]["name"])
@@ -88,7 +88,7 @@ def test_procedure():
     timer.timeout.connect(update)
     timer.start(50)
 
-
+    ht.disconnect_device(scan)
     ## Start Qt event loop unless running in interactive mode or using pyside.
     if __name__ == '__main__':
         import sys
@@ -98,9 +98,3 @@ def test_procedure():
 
 
     return operator_query_passfail()
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"

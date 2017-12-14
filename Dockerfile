@@ -8,15 +8,13 @@ ENV DEBIAN_FRONTEND noninteractive
 # Basic Packages
 RUN apt-get update -yyq --fix-missing && apt-get install -yyq wget bzip2 ca-certificates \
     libglib2.0-0 libxext6 libsm6 libxrender1 \
-    git mercurial subversion
+    git mercurial subversion \
+    software-properties-common apt-transport-https
 
-# Install Anaconda 3
-RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh -O ~/anaconda.sh && \
-    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-    rm ~/anaconda.sh
-RUN /opt/conda/bin/conda update --all
-ENV PATH /opt/conda/bin:$PATH
+# Add R-CRAN repository
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+RUN add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
+RUN apt-get update -yyq
 
 # Install Tini
 RUN apt-get install -yyq curl grep sed dpkg && \
@@ -26,22 +24,20 @@ RUN apt-get install -yyq curl grep sed dpkg && \
 
 # Install QT and X11
 RUN apt-get install -yyq  qt5-default libgl1-mesa-glx
-ENV QT_GRAPHICSSYSTEM native
+#ENV QT_GRAPHICSSYSTEM native
 
+# Install R and python 3
+RUN apt-get install -yyq python3-setuptools build-essential python3-pip
+RUN apt-get install -yyq r-base r-base-dev
 # R and python dependencies
 RUN apt-get install -y libbz2-dev libreadline-dev 
-RUN conda install -y r-essentials
 
 # Programming ICs and stuff
 RUN apt-get install -y avrdude flashrom dialog
-RUN apt-get install -y build-essential
 
 # Install python dependencies
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
-
-RUN echo "groupmod -g \$gid root" > /root/.bashrc
-RUN bash -c "source /root/.bashrc"
+RUN pip3 install -r /tmp/requirements.txt
 
 # Cleanup
 RUN rm tini.deb

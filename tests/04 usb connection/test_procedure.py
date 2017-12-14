@@ -3,7 +3,7 @@ import data_chan
 from dialog import Dialog
 import time
 
-def test_procedure():
+def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
@@ -29,7 +29,7 @@ def test_procedure():
                 d.infobox(str(meas).replace(", ", ",\n"), width=60, height=20)
             time.sleep(0.3)
 
-        ht.disconnect_devide(scan)
+        ht.disconnect_device(scan)
 
         if count_correct_meas < 20:
             d.msgbox("Too many measures were empty! fail", width=60)
@@ -47,9 +47,3 @@ def test_procedure():
         return False
         pass
     return True
-
-
-if test_procedure():
-    tests[TESTNAME]["status"] = "success"
-else:
-    tests[TESTNAME]["status"] = "failure"
