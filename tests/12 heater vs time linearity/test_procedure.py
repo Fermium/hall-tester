@@ -1,5 +1,3 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-import data_chan
 from dialog import Dialog
 import csv
 import time
@@ -11,6 +9,8 @@ samples_count = 1000
 
 
 def test_procedure(TESTNAME,testDict):
+    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+    import data_chan
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -53,7 +53,7 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
     print(measures)
     ht.disconnect_device(scan)
-    ht.deinit()
+    del ht
     testResult = compute.compute(testDict["asset_path"],measures,'i','ch2')
     if(not testResult):
         return False

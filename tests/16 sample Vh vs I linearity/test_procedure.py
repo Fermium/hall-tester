@@ -63,7 +63,7 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
-    ht.deinit()
+    del ht
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
     if(not testResult):
         return False

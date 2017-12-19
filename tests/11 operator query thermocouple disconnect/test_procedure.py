@@ -1,5 +1,3 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-import data_chan
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
@@ -8,6 +6,9 @@ import time
 
 
 def test_procedure(TESTNAME,testDict):
+    
+    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+    import data_chan
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -65,7 +66,7 @@ def test_procedure(TESTNAME,testDict):
 
 
     ht.disconnect_device(scan)
-    ht.deinit()
+    del ht
 
 
     if average >= 2.0:

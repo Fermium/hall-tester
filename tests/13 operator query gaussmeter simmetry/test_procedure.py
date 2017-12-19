@@ -1,5 +1,3 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-import data_chan
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
@@ -39,6 +37,11 @@ def operator_query_passfail(TESTNAME):
 
 
 def test_procedure(TESTNAME,testDict):
+    
+    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+    import data_chan
+    
+    
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
@@ -87,5 +90,5 @@ def test_procedure(TESTNAME,testDict):
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtGui.QApplication.instance().exec_()
     ht.disconnect_device(scan)
-    ht.deinit()
+    del ht
     return operator_query_passfail(TESTNAME)
