@@ -8,7 +8,7 @@ import compute
 
 def test_procedure(TESTNAME,testDict):
     ####### CONFIG
-    measures_to_take = 100
+    measures_to_take = 50
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
@@ -42,6 +42,11 @@ def test_procedure(TESTNAME,testDict):
             measures[i]["raw_current_code"] = raw_current_codes[i]
 
     d.gauge_stop()
-    
+
     ht.disconnect_device(scan)
-    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
+    testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
+    if(not testResult):
+        return False
+    if(not (0.0009-(0.0009*0.2)<=testResult['coeff']['slope']<=0.0009+(0.0009*0.2))):
+        return False
+    return testResult

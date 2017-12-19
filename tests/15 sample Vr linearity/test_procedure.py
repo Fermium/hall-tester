@@ -18,13 +18,11 @@ def test_procedure(TESTNAME,testDict):
 
     # Start Measuring
     ht.enable(scan)
-    print("aa")
     ht.set_channel_gain(scan, 3, 5)
-    print("bb")
     d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
 
     measures = {}
-    raw_current_codes = range (int(4095/2-200), int(4095/2+200))
+    raw_current_codes = range (int(2000), int(2100))
 
     # count from 0 to the total number of steps
     for i in range(len(raw_current_codes)):
@@ -44,4 +42,4 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
-    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
+    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch1')

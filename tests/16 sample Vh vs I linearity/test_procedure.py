@@ -5,7 +5,7 @@ import csv
 import time
 import compute
 
-def operator_query_instructions():
+def operator_query_instructions(TESTNAME):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
@@ -24,7 +24,7 @@ def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
-    if not operator_query_instructions():
+    if not operator_query_instructions(TESTNAME):
         return False
 
 
@@ -45,7 +45,7 @@ def test_procedure(TESTNAME,testDict):
 
 
     measures = {}
-    raw_current_codes = range (int(4095/2-200), int(4095/2+200))
+    raw_current_codes = range (int(2000), int(2100))
 
     # count from 0 to the total number of steps
     for i in range(len(raw_current_codes)):
@@ -65,4 +65,9 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
-    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
+    testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
+    if(not testResult):
+        return False
+    if(not (-0.0014-(-0.0014*0.2)<=testResult['coeff']['slope']<=-0.0014+(-0.0014*0.2))):
+        return False
+    return testResult

@@ -27,10 +27,11 @@ def test_procedure(TESTNAME,testDict):
 
     # Start Measuring
     ht.enable(scan)
-    ht.set_channel_gain(scan, 2, 1)
+    #ht.set_channel_gain(scan, 2, 1)
     #ht.set_current_fixed(scan, 0.05)
 
     ht.set_heater_state(scan, 255)
+    #ht.set_channel_gain(scan, 2, 1)
 
     d.gauge_start("Acquiring temperature over Time (with heater on)")
 
@@ -42,15 +43,19 @@ def test_procedure(TESTNAME,testDict):
         # pop all old measures
         while(ht.pop_measure(scan) != None):
             pass
+        time.sleep(0.150)
         measures[i] = ht.pop_measure(scan)
         if measures[i] is not None:
             measures[i]["i"] = i * sleep
 
         d.gauge_update(int(float(i) / samples_count * 100.0))
 
-
-
     d.gauge_stop()
-
+    print(measures)
     ht.disconnect_device(scan)
-    return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
+    testResult = compute.compute(testDict["asset_path"],measures,'i','ch2')
+    if(not testResult):
+        return False
+    if(not (testResult['coeff']['slope']>=0.0005)):
+        return False
+    return testResult
