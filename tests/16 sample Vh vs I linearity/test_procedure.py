@@ -38,9 +38,7 @@ def test_procedure(TESTNAME,testDict):
 
     # Start Measuring
     ht.enable(scan)
-    print("cc")
     ht.set_channel_gain(scan, 3, 5)
-    print("dd")
     d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
 
 
@@ -65,6 +63,7 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
+    ht.deinit()
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
     if(not testResult):
         return False

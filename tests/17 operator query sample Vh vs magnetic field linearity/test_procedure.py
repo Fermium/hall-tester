@@ -55,8 +55,6 @@ def test_procedure(TESTNAME,testDict):
         d.msgbox("Data-chan initialization failed")
         return False
 
-
-
     # Start Measuring
     ht.enable(scan)
     ht.set_channel_gain(scan, 6, 5)
@@ -66,35 +64,29 @@ def test_procedure(TESTNAME,testDict):
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
-
     meas = {"ch6":{}}
     meas["ch6"]["name"] = "Hall voltage (unamplified)"
-
     for key in meas:
         meas[key]["plotobj"] = win.addPlot(title=meas[key]["name"])
         meas[key]["data"] = [0]*100
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
-
 
     def update():
         popped_meas = ht.pop_measure(scan)
         if popped_meas is not None:
             for key in meas:
                 meas[key]["data"][:-1] = meas[key]["data"][1:]
-                meas[key]["data"][-1] = abs(popped_meas[key])
+                meas[key]["data"][-1] = popped_meas[key]
                 meas[key]["curveobj"].setData(meas[key]["data"])
 
     timer = pg.QtCore.QTimer()
     timer.timeout.connect(update)
     timer.start(50)
 
-
     ## Start Qt event loop unless running in interactive mode or using pyside.
-    if __name__ == '__main__':
-        import sys
-        if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-            QtGui.QApplication.instance().exec_()
-
-
+    import sys
+    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
+        QtGui.QApplication.instance().exec_()
     ht.disconnect_device(scan)
+    ht.deinit()
     return operator_query_passfail(TESTNAME)

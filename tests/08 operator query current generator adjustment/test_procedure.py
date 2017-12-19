@@ -75,4 +75,6 @@ def test_procedure(TESTNAME,testDict):
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtGui.QApplication.instance().exec_()
     ht.disconnect_device(scan)
+    ht.deinit()
+
     return True

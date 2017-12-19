@@ -53,6 +53,7 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
     print(measures)
     ht.disconnect_device(scan)
+    ht.deinit()
     testResult = compute.compute(testDict["asset_path"],measures,'i','ch2')
     if(not testResult):
         return False

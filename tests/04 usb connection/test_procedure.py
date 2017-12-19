@@ -30,7 +30,7 @@ def test_procedure(TESTNAME,testDict):
             time.sleep(0.3)
 
         ht.disconnect_device(scan)
-
+        ht.deinit()
         if count_correct_meas < 20:
             d.msgbox("Too many measures were empty! fail", width=60)
             return False

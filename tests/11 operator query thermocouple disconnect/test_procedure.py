@@ -53,7 +53,7 @@ def test_procedure(TESTNAME,testDict):
     #pop all old measures
     while(ht.pop_measure(scan) != None ):
         pass
-    
+
     # take an average of the thermocouple voltage
     average = 0
     for i in range(10):
@@ -62,11 +62,12 @@ def test_procedure(TESTNAME,testDict):
         if popped_meas is not None:
             average += popped_meas["ch2"]
     average = average / 10
-    
-    
+
+
     ht.disconnect_device(scan)
-    
-    
+    ht.deinit()
+
+
     if average >= 2.0:
         pass
     else:

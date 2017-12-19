@@ -10,7 +10,7 @@ def compute(assets_path,data,x,y):
 
     Y=numpy.array([data[dd][y] for dd in data if data[dd] is not None])
     X=numpy.array([data[dd][x] for dd in data if data[dd] is not None])
-
+    print(Y)
     X_m=sm.add_constant(X)
 
     results = sm.OLS(Y, X_m).fit()
@@ -18,7 +18,7 @@ def compute(assets_path,data,x,y):
     intercept=results.params[0]
     slope=results.params[1]
 
-    results.summary()
+    print(results.summary())
     sns.set()
 
     plot = sns.regplot(X,Y,scatter_kws={'color':'red','s':20})

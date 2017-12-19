@@ -42,4 +42,5 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
+    ht.deinit()
     return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch1')

@@ -8,9 +8,10 @@ import compute
 
 def test_procedure(TESTNAME,testDict):
     ####### CONFIG
-    measures_to_take = 50
+    measures_to_take = 100
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
+    d.msgbox("Disconnetti la schedina che fa click-click-click")
 
     try:
         ht.init()
@@ -44,6 +45,7 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
+    ht.deinit()
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
     if(not testResult):
         return False
