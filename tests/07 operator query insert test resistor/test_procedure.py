@@ -10,6 +10,7 @@ def test_procedure(TESTNAME,testDict):
     d.set_background_title("Testing: " + TESTNAME)
 
     testquery = d.msgbox("Collega la scheda di test con resistore da 4ohm allo strumento attraverso il cavo DB25", width=60)
+    testquery = d.msgbox("Alimenta il minuscolo arduino della scheda 4ohm con la USB. Conferma se fa click-click-click", width=60)
 
     # The user pressed cancel
     if testquery is not "ok":

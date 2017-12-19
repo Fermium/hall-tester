@@ -14,8 +14,10 @@ def test_procedure(TESTNAME,testDict):
 
     try:
         ht.init()
+        print(1)
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
+        print(2)
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False

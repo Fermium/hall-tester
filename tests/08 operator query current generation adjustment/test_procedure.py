@@ -10,7 +10,7 @@ def operator_query_instructions(TESTNAME):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
-
+    testquery = d.msgbox("Alimenta il minuscolo arduino della scheda 4ohm con la USB. Conferma se fa click-click-click", width=60)
     testquery = d.msgbox("Tara il generatore affinche' ci sia minima variazione della corrente", width=60)
 
     # The user pressed cancel
@@ -26,7 +26,6 @@ def test_procedure(TESTNAME,testDict):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
-
 
     if not operator_query_instructions(TESTNAME):
         return False
@@ -52,15 +51,12 @@ def test_procedure(TESTNAME,testDict):
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
-
     meas = {"ch3":{}}
     meas["ch3"]["name"] = "V on CC Shunt"
-
     for key in meas:
         meas[key]["plotobj"] = win.addPlot(title=meas[key]["name"])
         meas[key]["data"] = [0]*100
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
-
 
     def update():
         popped_meas = ht.pop_measure(scan)
@@ -74,11 +70,9 @@ def test_procedure(TESTNAME,testDict):
     timer.timeout.connect(update)
     timer.start(50)
 
-    ht.disconnect_device(scan)
     ## Start Qt event loop unless running in interactive mode or using pyside.
-    if __name__ == '__main__':
-        import sys
-        if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-            QtGui.QApplication.instance().exec_()
-
+    import sys
+    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
+        QtGui.QApplication.instance().exec_()
+    ht.disconnect_device(scan)
     return True
