@@ -1,4 +1,4 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+ 
 import data_chan
 from dialog import Dialog
 import csv
@@ -10,7 +10,7 @@ sleep = 0.5
 samples_count = 1000
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -18,7 +18,6 @@ def test_procedure(TESTNAME,testDict):
     d.msgbox("Connect the heater and press OK")
 
     try:
-        ht.init()
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0, 0x0c9b)
     except DataChanDeviceNotFoundOrInaccessibleError:

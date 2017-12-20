@@ -1,4 +1,4 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+ 
 import data_chan
 from dialog import Dialog
 import csv
@@ -6,7 +6,7 @@ import time
 import compute
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     ####### CONFIG
     measures_to_take = 100
     d = Dialog(dialog="dialog")
@@ -14,7 +14,6 @@ def test_procedure(TESTNAME,testDict):
     d.msgbox("Disconnetti la schedina che fa click-click-click")
 
     try:
-        ht.init()
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
     except Exception:

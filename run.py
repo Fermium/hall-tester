@@ -10,6 +10,8 @@ from upload_to_s3 import upload_assets_s3
 import argparse
 from collections import OrderedDict
 import importlib
+from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+
 
 parser = argparse.ArgumentParser("Run HW Tests")
 parser.add_argument("--filter", dest="filters", type=str,
@@ -29,6 +31,7 @@ title = "Fermium LABS testing procedure - Hall Effect apparatus"
 
 masterdialog = Masterdialog(dialog="dialog")
 masterdialog.set_background_title(title)
+ht.init()
 
 testspaths = glob.glob("./tests/*/test_procedure.py")
 testspaths.sort()
@@ -101,7 +104,7 @@ for TESTNAME in tests:
         importlib.reload(test_procedure)
     else:
         import test_procedure
-    tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME])
+    tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME],ht)
     if tests[TESTNAME]['data']:
         tests[TESTNAME]["status"] = "success"
     else:

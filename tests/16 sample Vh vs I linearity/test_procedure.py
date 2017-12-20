@@ -1,4 +1,4 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+ 
 import data_chan
 from dialog import Dialog
 import csv
@@ -20,7 +20,7 @@ def operator_query_instructions(TESTNAME):
         return True
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
@@ -29,7 +29,6 @@ def test_procedure(TESTNAME,testDict):
 
 
     try:
-        ht.init()
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
     except Exception:
@@ -63,7 +62,6 @@ def test_procedure(TESTNAME,testDict):
     d.gauge_stop()
 
     ht.disconnect_device(scan)
-    ht.deinit()
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
     if(not testResult):
         return False

@@ -1,4 +1,4 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+ 
 import data_chan
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
@@ -7,17 +7,14 @@ from dialog import Dialog
 import time
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
     try:
-        ht.init()
-        print(1)
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
-        print(2)
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
@@ -65,7 +62,6 @@ def test_procedure(TESTNAME,testDict):
 
 
     ht.disconnect_device(scan)
-    ht.deinit()
 
 
     if average >= 2.0:

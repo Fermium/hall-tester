@@ -1,17 +1,15 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+ 
 import data_chan
 from dialog import Dialog
 import time
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
 
     try:
-        # Initialize
-        ht.init()
-
+       
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0,0x0c9b)
         # Start Measuring
@@ -30,7 +28,6 @@ def test_procedure(TESTNAME,testDict):
             time.sleep(0.3)
 
         ht.disconnect_device(scan)
-        ht.deinit()
         if count_correct_meas < 20:
             d.msgbox("Too many measures were empty! fail", width=60)
             return False

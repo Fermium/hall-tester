@@ -20,7 +20,7 @@ avrdude_fuses_flags = "-U lfuse:w:0x9e:m -U hfuse:w:0x99:m -U efuse:w:0xc3:m"
 firmware_md5_filename = "checksums.md5"
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
