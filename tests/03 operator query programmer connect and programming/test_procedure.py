@@ -7,7 +7,7 @@ import subprocess
 # Where to dowload the firmware from (amazon s3)
 firmware_bucket_name = 'fermiumlabs-firmware-builds'
 firmware_branch = "master"
-firmware_commit_hash = "6e0de71ff0fbd3a51eee6cc2bc0a7685463a35d3"
+firmware_commit_hash = "d4dbf73389dd9b1fefd39750d7c518ad25c70729"
 firmware_filename = "main.hex"
 firmware_path = "hall-firmware-v2/" + \
     firmware_branch + "/" + firmware_commit_hash + "/"

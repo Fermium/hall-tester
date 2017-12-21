@@ -24,7 +24,7 @@ def test_procedure(TESTNAME,testDict,ht):
     
     time.sleep(1)
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(sleep)
 
     ht.set_heater_state(255)
@@ -46,11 +46,12 @@ def test_procedure(TESTNAME,testDict,ht):
         d.gauge_update(int(float(i) / samples_count * 100.0))
 
     d.gauge_stop()
-    ht.disconnect_device()
+    
     
     testResult = compute.compute(testDict["asset_path"],measures,'i','ch2')
     if(not testResult):
         return False
     if(not (testResult['coeff']['slope']>=0.0005)):
         return False
+    #ht.disable()
     return testResult

@@ -13,20 +13,12 @@ def test_procedure(TESTNAME,testDict,ht):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
-    try:
-        
-        # Acquire the Hall Effect Apparatus
-        ht.acquire(0x16d0,0x0c9b)
 
-
-    except:
-        d.msgbox("Data-chan initialization failed")
-        return False
 
 
 
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(1)
     ht.set_channel_gain(2, 5)
 
@@ -66,7 +58,7 @@ def test_procedure(TESTNAME,testDict,ht):
     average = average / 10
 
 
-    ht.disconnect_device()
+    
     
 
 
@@ -75,6 +67,7 @@ def test_procedure(TESTNAME,testDict,ht):
     else:
         d.msgbox("termocouple pullup not triggered, measured an avg of " + str(average) + " V")
         return False
+    #ht.disable()
     return True
 """
     win = pg.GraphicsWindow()

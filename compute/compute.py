@@ -24,6 +24,7 @@ def compute(assets_path,data,x,y):
     plot = sns.regplot(X,Y,scatter_kws={'color':'red','s':20})
     fig = plot.get_figure()
     fig.savefig(os.path.join(assets_path,  "plot.png"))
+    fig.clf()
     test=dict()
     if(not results.f_pvalue<=0.05):
         return False

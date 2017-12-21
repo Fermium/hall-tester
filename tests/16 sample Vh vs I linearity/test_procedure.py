@@ -1,4 +1,3 @@
-from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
 
 from dialog import Dialog
 import csv
@@ -28,17 +27,9 @@ def test_procedure(TESTNAME,testDict,ht):
         return False
 
 
-    try:
-        
-        # Acquire the Hall Effect Apparatus
-        ht.acquire(0x16d0,0x0c9b)
-
-    except Exception:
-        d.msgbox("Data-chan initialization failed")
-        return False
 
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(1)
     ht.set_channel_gain(6, 5)
     d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
@@ -64,11 +55,12 @@ def test_procedure(TESTNAME,testDict,ht):
 
     d.gauge_stop()
 
-    ht.disconnect_device()
+    
     
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
     if(not testResult):
         return False
     if(not (-0.0014-(-0.0014*0.2)<=testResult['coeff']['slope']<=-0.0014+(-0.0014*0.2))):
         return False
+    #ht.disable()
     return testResult

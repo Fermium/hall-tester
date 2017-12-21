@@ -13,16 +13,9 @@ def test_procedure(TESTNAME,testDict,ht):
     d.set_background_title("Testing: " + TESTNAME)
     d.msgbox("Disconnetti la schedina che fa click-click-click")
 
-    try:
-        # Acquire the Hall Effect Apparatus
-        ht.acquire(0x16d0,0x0c9b)
-
-    except Exception:
-        d.msgbox("Data-chan initialization failed")
-        return False
 
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(1)
     ht.set_channel_gain(3, 5)
 
@@ -45,11 +38,12 @@ def test_procedure(TESTNAME,testDict,ht):
 
     d.gauge_stop()
 
-    ht.disconnect_device()
+    
     
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch3')
     if(not testResult):
         return False
     if(not (0.0009-(0.0009*0.2)<=testResult['coeff']['slope']<=0.0009+(0.0009*0.2))):
         return False
+    #ht.disable()
     return testResult

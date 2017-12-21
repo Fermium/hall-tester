@@ -33,8 +33,7 @@ def test_procedure(TESTNAME,testDict,ht):
                 d.infobox(str(meas).replace(", ", ",\n"), width=60, height=20)
             time.sleep(0.3)
 
-        ht.disconnect_device()
-        
+        #ht.disable()
         if count_correct_meas < 20:
             d.msgbox("Too many measures were empty! fail", width=60)
             return False

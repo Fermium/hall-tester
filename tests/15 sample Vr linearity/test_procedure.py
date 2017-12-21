@@ -8,17 +8,10 @@ def test_procedure(TESTNAME,testDict,ht):
     
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
-    try:
-        
-        # Acquire the Hall Effect Apparatus
-        ht.acquire(0x16d0,0x0c9b)
 
-    except:
-        d.msgbox("Data-chan initialization failed")
-        return False
 
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(1)
     
     d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
@@ -44,6 +37,6 @@ def test_procedure(TESTNAME,testDict,ht):
 
     d.gauge_stop()
 
-    ht.disconnect_device()
     
+    #ht.disable()
     return compute.compute(testDict["asset_path"],measures,'raw_current_code','ch1')

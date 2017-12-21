@@ -42,18 +42,8 @@ def test_procedure(TESTNAME,testDict,ht):
     if not operator_query_instructions(TESTNAME):
         return False
 
-
-    try:
-        
-        # Acquire the Hall Effect Apparatus
-        ht.acquire(0x16d0,0x0c9b)
-
-    except Exception:
-        d.msgbox("Data-chan initialization failed")
-        return False
-
     # Start Measuring
-    ht.enable()
+    #ht.enable()
     time.sleep(1)
     ht.set_channel_gain(6, 5)
 
@@ -85,6 +75,6 @@ def test_procedure(TESTNAME,testDict,ht):
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtGui.QApplication.instance().exec_()
-    ht.disconnect_device()
     
+    ht.disable()
     return operator_query_passfail(TESTNAME)
