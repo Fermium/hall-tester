@@ -1,16 +1,14 @@
 from dialog import Dialog
-import csv
 import time
 import compute
-import pdb
 ############## CONFIG
 sleep = 0.5
 samples_count = 1000
 
 
-def test_procedure(TESTNAME,testDict):
-    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-    import data_chan
+def test_procedure(TESTNAME,testDict,ht):
+    print(ht)
+    
 
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -18,42 +16,38 @@ def test_procedure(TESTNAME,testDict):
     d.msgbox("Connect the heater and press OK")
 
     try:
-        ht.init()
         # Acquire the Hall Effect Apparatus
         scan = ht.acquire(0x16d0, 0x0c9b)
-    except DataChanDeviceNotFoundOrInaccessibleError:
+    except:
         d.msgbox("Data-chan initialization failed")
         return False
-
+    
+    time.sleep(1)
     # Start Measuring
-    ht.enable(scan)
-    #ht.set_channel_gain(scan, 2, 1)
-    #ht.set_current_fixed(scan, 0.05)
+    ht.enable()
+    time.sleep(sleep)
 
-    ht.set_heater_state(scan, 255)
-    #ht.set_channel_gain(scan, 2, 1)
-
+    ht.set_heater_state(255)
+    time.sleep(sleep)
     d.gauge_start("Acquiring temperature over Time (with heater on)")
 
     measures = {}
     # count from 0 to the total number of steps
     for i in range(samples_count):
-        time.sleep(sleep)
-
+        
         # pop all old measures
-        while(ht.pop_measure(scan) != None):
+        while(ht.pop_measure() != None):
             pass
-        time.sleep(0.150)
-        measures[i] = ht.pop_measure(scan)
+        time.sleep(sleep)
+        measures[i] = ht.pop_measure()
         if measures[i] is not None:
-            measures[i]["i"] = i * sleep
+            measures[i]["i"] = i * 2 * sleep
 
         d.gauge_update(int(float(i) / samples_count * 100.0))
 
     d.gauge_stop()
-    print(measures)
-    ht.disconnect_device(scan)
-    del ht
+    ht.disconnect_device()
+    
     testResult = compute.compute(testDict["asset_path"],measures,'i','ch2')
     if(not testResult):
         return False

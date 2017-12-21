@@ -1,4 +1,4 @@
-#!/home/d/anaconda3/bin/python
+
 import sys
 import glob
 import os
@@ -10,6 +10,11 @@ from upload_to_s3 import upload_assets_s3
 import argparse
 from collections import OrderedDict
 import importlib
+
+from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
+hallapp = ht.HallEffectApparatus()
+
+
 
 parser = argparse.ArgumentParser("Run HW Tests")
 parser.add_argument("--filter", dest="filters", type=str,
@@ -31,7 +36,9 @@ masterdialog = Masterdialog(dialog="dialog")
 masterdialog.set_background_title(title)
 
 testspaths = glob.glob("./tests/*/test_procedure.py")
+
 testspaths.sort()
+
 print([os.path.dirname(testpath).split("/").pop() for testpath in testspaths])
 # Fundamental test dict
 tests = OrderedDict()
@@ -57,7 +64,6 @@ for test in tests:
 if args.filters:
     for filter in args.filters:
         tests = {k: v for (k, v) in tests.items() if filter in k}
-
 
 def show_master_dialog():
     """show quick summary of the progress"""
@@ -87,6 +93,7 @@ def signal_handler(signal, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 
+
 # Execute tests
 for TESTNAME in tests:
     # clear screen
@@ -101,7 +108,7 @@ for TESTNAME in tests:
         importlib.reload(test_procedure)
     else:
         import test_procedure
-    tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME])
+    tests[TESTNAME]['data']=test_procedure.test_procedure(TESTNAME,tests[TESTNAME],hallapp)
     if tests[TESTNAME]['data']:
         tests[TESTNAME]["status"] = "success"
     else:

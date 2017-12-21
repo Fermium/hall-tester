@@ -1,5 +1,5 @@
 from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-import data_chan
+
 from dialog import Dialog
 import csv
 import time
@@ -20,7 +20,7 @@ def operator_query_instructions(TESTNAME):
         return True
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
 
@@ -29,31 +29,33 @@ def test_procedure(TESTNAME,testDict):
 
 
     try:
-        ht.init()
+        
         # Acquire the Hall Effect Apparatus
-        scan = ht.acquire(0x16d0,0x0c9b)
+        ht.acquire(0x16d0,0x0c9b)
+
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
 
     # Start Measuring
-    ht.enable(scan)
-    ht.set_channel_gain(scan, 3, 5)
+    ht.enable()
+    time.sleep(1)
+    ht.set_channel_gain(6, 5)
     d.gauge_start("Acquiring DAC Voltage VS Hall Vr measures")
 
 
     measures = {}
-    raw_current_codes = range (int(2000), int(2100))
-
+    measures_to_take = 50
+    raw_current_codes = range (int(4095/2-measures_to_take), int(4095/2+measures_to_take))
     # count from 0 to the total number of steps
     for i in range(len(raw_current_codes)):
 
-        ht.set_current_raw(scan,raw_current_codes[i])
+        ht.set_current_raw(raw_current_codes[i])
         #pop all old measures
-        while(ht.pop_measure(scan) != None ):
+        while(ht.pop_measure() != None ):
             pass
-        time.sleep(0.150)
-        measures[i] = ht.pop_measure(scan)
+        time.sleep(0.500)
+        measures[i] = ht.pop_measure()
 
         d.gauge_update(int(float(i) / float(len(raw_current_codes)) * 100.0))
 
@@ -62,8 +64,8 @@ def test_procedure(TESTNAME,testDict):
 
     d.gauge_stop()
 
-    ht.disconnect_device(scan)
-    del ht
+    ht.disconnect_device()
+    
     testResult = compute.compute(testDict["asset_path"],measures,'raw_current_code','ch6')
     if(not testResult):
         return False

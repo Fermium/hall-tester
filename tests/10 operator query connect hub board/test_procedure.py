@@ -3,7 +3,7 @@ import os
 from dialog import Dialog
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
 
     d = Dialog(dialog="dialog")
 

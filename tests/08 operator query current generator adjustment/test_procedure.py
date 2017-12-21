@@ -8,6 +8,7 @@ def operator_query_instructions(TESTNAME):
     d = Dialog(dialog="dialog")
 
     d.set_background_title("Testing: " + TESTNAME)
+    testquery = d.msgbox("Connetti la scheda 4ohm con il cavo parallelo", width=60)
     testquery = d.msgbox("Alimenta il minuscolo arduino della scheda 4ohm con la USB. Conferma se fa click-click-click", width=60)
     testquery = d.msgbox("Tara il generatore affinche' ci sia minima variazione della corrente", width=60)
 
@@ -20,10 +21,10 @@ def operator_query_instructions(TESTNAME):
 
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     
-    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-    import data_chan
+
+    
     
     d = Dialog(dialog="dialog")
 
@@ -34,9 +35,10 @@ def test_procedure(TESTNAME,testDict):
 
 
     try:
-        ht.init()
+        
         # Acquire the Hall Effect Apparatus
-        scan = ht.acquire(0x16d0,0x0c9b)
+        ht.acquire(0x16d0,0x0c9b)
+
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
@@ -45,11 +47,12 @@ def test_procedure(TESTNAME,testDict):
 
 
     # Start Measuring
-    ht.enable(scan)
-    ht.set_channel_gain(scan, 3, 5)
+    ht.enable()
+    time.sleep(1)
+    
 
     # Set CC gen
-    ht.set_current_fixed(scan, 0.3)
+    ht.set_current_fixed( 0.3)
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
@@ -61,7 +64,7 @@ def test_procedure(TESTNAME,testDict):
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
 
     def update():
-        popped_meas = ht.pop_measure(scan)
+        popped_meas = ht.pop_measure()
         if popped_meas is not None:
             for key in meas:
                 meas[key]["data"][:-1] = meas[key]["data"][1:]
@@ -76,7 +79,7 @@ def test_procedure(TESTNAME,testDict):
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtGui.QApplication.instance().exec_()
-    ht.disconnect_device(scan)
-    del ht
+    ht.disconnect_device()
+    
 
     return True

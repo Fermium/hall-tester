@@ -36,10 +36,10 @@ def operator_query_passfail(TESTNAME):
 
 
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     
-    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-    import data_chan
+
+    
     
     
     d = Dialog(dialog="dialog")
@@ -49,20 +49,22 @@ def test_procedure(TESTNAME,testDict):
     if not operator_query_instructions(TESTNAME):
         return False
     try:
-        ht.init()
+        
         # Acquire the Hall Effect Apparatus
-        scan = ht.acquire(0x16d0,0x0c9b)
+        ht.acquire(0x16d0,0x0c9b)
+
     except Exception:
         d.msgbox("Data-chan initialization failed")
         return False
 
 
     # Start Measuring
-    ht.enable(scan)
-    ht.set_channel_gain(scan, 5, 5)
+    ht.enable()
+    time.sleep(1)
+    ht.set_channel_gain(5, 5)
 
     # Set CC gen
-    ht.set_current_fixed(scan, 0.3)
+    ht.set_current_fixed( 0.3)
 
     win = pg.GraphicsWindow()
     win.setWindowTitle(TESTNAME)
@@ -74,7 +76,7 @@ def test_procedure(TESTNAME,testDict):
         meas[key]["curveobj"] = meas[key]["plotobj"].plot(meas[key]["data"])
 
     def update():
-        popped_meas = ht.pop_measure(scan)
+        popped_meas = ht.pop_measure()
         if popped_meas is not None:
             for key in meas:
                 meas[key]["data"][:-1] = meas[key]["data"][1:]
@@ -89,6 +91,6 @@ def test_procedure(TESTNAME,testDict):
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
         QtGui.QApplication.instance().exec_()
-    ht.disconnect_device(scan)
-    del ht
+    ht.disconnect_device()
+    
     return operator_query_passfail(TESTNAME)

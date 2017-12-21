@@ -2,10 +2,9 @@
 from dialog import Dialog
 import time
 
-def test_procedure(TESTNAME,testDict):
+def test_procedure(TESTNAME,testDict,ht):
     
-    from data_chan.instruments.fermiumlabs_labtrek_jv import hall_effect_apparatus as ht
-    import data_chan
+    
     
     d = Dialog(dialog="dialog")
     d.set_background_title("Testing: " + TESTNAME)
@@ -13,27 +12,29 @@ def test_procedure(TESTNAME,testDict):
 
     try:
         # Initialize
-        ht.init()
+        
 
         # Acquire the Hall Effect Apparatus
-        scan = ht.acquire(0x16d0,0x0c9b)
+        ht.acquire(0x16d0,0x0c9b)
+
         # Start Measuring
-        ht.enable(scan)
+        ht.enable()
+        time.sleep(1)
 
         # Set CC gen
-        ht.set_current_fixed(scan, 0.01)
+        ht.set_current_fixed( 0.01)
 
         # Check that the reported measures are ok
         count_correct_meas = 0
         for i in range (1,25):
-            meas = ht.pop_measure(scan)
+            meas = ht.pop_measure()
             if meas is not None:
                 count_correct_meas += 1
                 d.infobox(str(meas).replace(", ", ",\n"), width=60, height=20)
             time.sleep(0.3)
 
-        ht.disconnect_device(scan)
-        del ht
+        ht.disconnect_device()
+        
         if count_correct_meas < 20:
             d.msgbox("Too many measures were empty! fail", width=60)
             return False
